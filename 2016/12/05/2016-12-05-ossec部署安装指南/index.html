@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="1.简介ossec官方网站：http://www.ossec.net/ ossec帮助文档：http://ossec-docs.readthedocs.org/en/latest/manual/index.html OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ossec部署安装指南">
+<meta property="og:url" content="http://pyscan.me/2016/12/05/2016-12-05-ossec部署安装指南/index.html">
+<meta property="og:site_name" content="请叫我向公&#39;blog">
+<meta property="og:description" content="1.简介ossec官方网站：http://www.ossec.net/ ossec帮助文档：http://ossec-docs.readthedocs.org/en/latest/manual/index.html OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-01-15T07:46:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ossec部署安装指南">
+<meta name="twitter:description" content="1.简介ossec官方网站：http://www.ossec.net/ ossec帮助文档：http://ossec-docs.readthedocs.org/en/latest/manual/index.html OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pyscan.me/2016/12/05/2016-12-05-ossec部署安装指南/"/>
+
+
+
+
+
+  <title>ossec部署安装指南 | 请叫我向公'blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">请叫我向公'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pyscan.me/2016/12/05/2016-12-05-ossec部署安装指南/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bunny">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="请叫我向公'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ossec部署安装指南</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-05T15:25:45+08:00">
+                2016-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>ossec官方网站：<a href="http://www.ossec.net/" target="_blank" rel="external">http://www.ossec.net/</a></p>
+<p>ossec帮助文档：<a href="http://ossec-docs.readthedocs.org/en/latest/manual/index.html" target="_blank" rel="external">http://ossec-docs.readthedocs.org/en/latest/manual/index.html</a></p>
+<p>OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的时，Solaris，HP-UX，AIX和Windows</p>
+<p>ossec wazuh版（如果安装server版，强烈推荐安装此版本）：<a href="http://wazuh-documentation.readthedocs.io/en/latest/" target="_blank" rel="external">http://wazuh-documentation.readthedocs.io/en/latest/</a></p>
+<a id="more"></a>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2.安装"></a>2.安装</h2><h3 id="2-1安装环境"><a href="#2-1安装环境" class="headerlink" title="2.1安装环境"></a>2.1安装环境</h3><p>需要安装：<code>sudo yum install  make gcc git</code>、<code>sudo apt-get install gcc make git</code></p>
+<p>如果需要认证：<code>sudo yum install openssl-devel</code>、<code>sudo apt-get install libssl-dev</code></p>
+<h3 id="2-2下载并安装"><a href="#2-2下载并安装" class="headerlink" title="2.2下载并安装"></a>2.2下载并安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd ~</div><div class="line">$ mkdir ossec_tmp &amp;&amp; cd ossec_tmp</div><div class="line">$ git clone -b stable https://github.com/wazuh/wazuh.git ossec-wazuh</div><div class="line">$ cd ossec-wazuh</div><div class="line">$ sudo ./install.sh</div></pre></td></tr></table></figure>
+<p>选择server安装后并根据问题选择安装内容，安装完后，你可以启动ossec启动服务：<br><code>sudo /var/ossec/bin/ossec-control start</code></p>
+<h3 id="2-3添加agent"><a href="#2-3添加agent" class="headerlink" title="2.3添加agent"></a>2.3添加agent</h3><p>在server端执行<code>/var/ossec/bin/manage_agents</code>来选择添加一个新的agent</p>
+<p>在agent端修改配置文件<code>/var/ossec/etc/ossec.conf</code>，设置server-ip的值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;ossec_config&gt;</div><div class="line">	&lt;client&gt;</div><div class="line">		&lt;server-ip&gt;XXX.XXX.XXX.XXX&lt;/server-ip&gt;</div><div class="line">	&lt;/client&gt;</div></pre></td></tr></table></figure>
+<p>在agent端执行<code>/var/ossec/bin/manage_agents</code>来添加key，添加key成功后，重启agent：<code>/var/ossec/bin/ossec-control restart</code></p>
+<p>至此，关于agent的server、agent端部署完成。</p>
+<h2 id="3-坑"><a href="#3-坑" class="headerlink" title="3.坑"></a>3.坑</h2><h3 id="3-1数据库支持"><a href="#3-1数据库支持" class="headerlink" title="3.1数据库支持"></a>3.1数据库支持</h3><p>当我们需要将ossec结果保存到数据库中，我们需要在编译时加入对数据库的支持。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># sudo apt-get install libmysqlclient-dev</div><div class="line"># sudo apt-get install mysql-server</div><div class="line"># sudo apt-get install mysql-client</div></pre></td></tr></table></figure>
+<p>在执行<code>./install.sh</code>之前，我们需要编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># cd ossec-hids-*</div><div class="line"># cd src; make setdb; cd ..</div><div class="line"># ./install.sh</div></pre></td></tr></table></figure>
+<p>激活数据库输出选择：<code># /var/ossec/bin/ossec-control enable database</code></p>
+<p>数据库设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"># mysql -u root -proot</div><div class="line">mysql&gt; create database ossec;</div><div class="line">mysql&gt; grant INSERT,SELECT,UPDATE,CREATE,DELETE,EXECUTE on ossec.* to caoqing@&apos;192.168.27.%&apos;;</div><div class="line">mysql&gt; set password for caoqing@&apos;192.168.27.%&apos;=PASSWORD(&apos;caoqing&apos;);</div><div class="line">mysql&gt; flush privileges;</div><div class="line">mysql&gt; quit</div><div class="line"># mysql -u root -proot ossec &lt; /root/soft/ossec-hids-2.7.1/src/os_dbd/mysql.schema</div><div class="line"># mysql -u root -proot ossec</div><div class="line">mysql&gt; show tables;</div><div class="line">+----------------------------+</div><div class="line">| Tables_in_ossec            |</div><div class="line">+----------------------------+</div><div class="line">| agent                      |</div><div class="line">| alert                      |</div><div class="line">| category                   |</div><div class="line">| data                       |</div><div class="line">| location                   |</div><div class="line">| server                     |</div><div class="line">| signature                  |</div><div class="line">| signature_category_mapping |</div><div class="line">+----------------------------+</div><div class="line">8 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>配置文件配置<code>/var/ossec/etc/ossec.conf</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;ossec_config&gt;</div><div class="line">    &lt;database_output&gt;</div><div class="line">        &lt;hostname&gt;xx.xx.xx.xx&lt;/hostname&gt;</div><div class="line">        &lt;username&gt;xxx&lt;/username&gt;</div><div class="line">        &lt;password&gt;xxx&lt;/password&gt;</div><div class="line">        &lt;database&gt;ossec&lt;/database&gt;</div><div class="line">        &lt;type&gt;mysql&lt;/type&gt;</div><div class="line">    &lt;/database_output&gt;</div><div class="line">&lt;/ossec_config&gt;</div></pre></td></tr></table></figure>
+<p>重启服务并查看服务状态中是否包含dbd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># /var/ossec/bin/ossec-control enable database</div><div class="line"># /var/ossec/bin/ossec-control restart</div><div class="line"># /var/ossec/bin/ossec-control status</div><div class="line">ossec-monitord is running...</div><div class="line">ossec-logcollector is running...</div><div class="line">ossec-remoted is running...</div><div class="line">ossec-syscheckd is running...</div><div class="line">ossec-analysisd is running...</div><div class="line">ossec-maild not running...</div><div class="line">ossec-execd is running...</div><div class="line">ossec-dbd is running...</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/10/2016-09-10-mongo-connector导入数据到elasticsearch/" rel="next" title="mongo-connector导入数据到elasticsearch">
+                <i class="fa fa-chevron-left"></i> mongo-connector导入数据到elasticsearch
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/05/2016-12-05-ossec-for-elk部署/" rel="prev" title="ossec-for-elk部署">
+                ossec-for-elk部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">bunny</p>
+            <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-简介"><span class="nav-number">1.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装"><span class="nav-number">2.</span> <span class="nav-text">2.安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1安装环境"><span class="nav-number">2.1.</span> <span class="nav-text">2.1安装环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2下载并安装"><span class="nav-number">2.2.</span> <span class="nav-text">2.2下载并安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3添加agent"><span class="nav-number">2.3.</span> <span class="nav-text">2.3添加agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-坑"><span class="nav-number">3.</span> <span class="nav-text">3.坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1数据库支持"><span class="nav-number">3.1.</span> <span class="nav-text">3.1数据库支持</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bunny</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

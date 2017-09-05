@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。 代码实现：https://github.com/virjar/dungproxy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python实现代理ip池">
+<meta property="og:url" content="http://pyscan.me/2017/01/19/2017-01-19-python实现代理ip池/index.html">
+<meta property="og:site_name" content="请叫我向公&#39;blog">
+<meta property="og:description" content="前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。 代码实现：https://github.com/virjar/dungproxy">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-02-20T01:45:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python实现代理ip池">
+<meta name="twitter:description" content="前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。 代码实现：https://github.com/virjar/dungproxy">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pyscan.me/2017/01/19/2017-01-19-python实现代理ip池/"/>
+
+
+
+
+
+  <title>python实现代理ip池 | 请叫我向公'blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">请叫我向公'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/01/19/2017-01-19-python实现代理ip池/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bunny">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="请叫我向公'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python实现代理ip池</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-19T16:11:02+08:00">
+                2017-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。</p>
+<p>代码实现：<a href="https://github.com/virjar/dungproxy" target="_blank" rel="external">https://github.com/virjar/dungproxy</a></p>
+<a id="more"></a>
+<h3 id="前期调研"><a href="#前期调研" class="headerlink" title="前期调研"></a>前期调研</h3><ul>
+<li>代理分类方式</li>
+<li>代理IP来源确认</li>
+<li>代理IP属性确认</li>
+<li>代理IP连接情况判断方法</li>
+<li>代理IP保存方法</li>
+<li>代理IP使用方法</li>
+</ul>
+<h4 id="代理种类-引用wikipedia"><a href="#代理种类-引用wikipedia" class="headerlink" title="代理种类(引用wikipedia)"></a>代理种类(引用<a href="https://zh.wikipedia.org/zh-cn/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="external">wikipedia</a>)</h4><p>根据<strong>协议</strong>区分：</p>
+<blockquote>
+<ul>
+<li><code>FTP代理服务器</code><br>主要用于访问FTP服务器，一般有上传、下载以及缓存功能。端口一般为21、2121等。</li>
+<li><code>HTTP代理服务器</code><br>主要用于访问网页，一般有内容过滤和缓存功能。端口一般为80、8080、3128等。</li>
+<li><code>SSL/TLS代理</code><br>主要用于访问加密网站，一般有SSL或TLS加密功能（最高支持128位加密强度）。端口一般为443。</li>
+<li><code>RTSP代理</code><br>主要用于Realplayer访问Real流媒体服务器，一般有缓存功能。端口一般为554。</li>
+<li><code>Telnet代理</code><br>主要用于telnet远程控制（黑客入侵计算机时常用于隐藏身份）。端口一般为23。</li>
+<li><code>POP3/SMTP代理</code><br>主要用于POP3/SMTP方式收发邮件，一般有缓存功能。端口一般为110/25。</li>
+<li><code>SOCKS代理</code><br>只是单纯传递数据包，不关心具体协议和用法，所以速度快很多。一般有缓存功能。端口一般为1080。（SOCKS代理协议又分为SOCKS4和SOCKS5，SOCKS4协议只支持TCP，而SOCKS5协议支持TCP和UDP，还支持各种身份验证机制、服务器端域名解析等。简单来说：SOCK4能做到的SOCKS5都可以做到，但SOCKS5能做到的SOCK4不一定能做到）</li>
+</ul>
+</blockquote>
+<p>根据<strong>匿名程度</strong>区分：</p>
+<blockquote>
+<ul>
+<li><code>高度匿名代理</code><br>高度匿名代理会将我们的数据包原封不动的转发，在服务端看来就好像真的是一个普通客户端在访问，而记录的IP是代理服务器的IP。</li>
+<li><code>普通匿名代理</code><br>普通匿名代理会在数据包上做一些改动，服务端上有可能发现这是个代理服务器，也有一定几率追查到你的真实IP。代理服务器通常会加入的HTTP头有HTTP_VIA和HTTP_X_FORWARDED_FOR 。</li>
+<li><code>透明代理</code><br>透明代理不但改动了我们的数据包，还会告诉服务器你的真实IP。这种代理除了能用缓存技术帮你提高浏览速度，能用内容过滤提高你的安全性之外，并无其他显著作用。（最常见的例子是：内网中的硬件防火墙）</li>
+<li><code>间谍代理</code><br>间谍代理指组织或个人创建的，用于记录用户传输的数据，然后进行研究、监控等目的代理服务器。</li>
+</ul>
+</blockquote>
+<h4 id="代理IP来源"><a href="#代理IP来源" class="headerlink" title="代理IP来源"></a>代理IP来源</h4><p>从搜索引擎搜索关键字<code>代理ip</code>来看，存在很多提供免费代理ip的分享站点；</p>
+<ul>
+<li><a href="http://www.kuaidaili.com/free/" target="_blank" rel="external">http://www.kuaidaili.com/free/</a></li>
+<li>www.xicidaili.com/</li>
+<li><a href="http://cn-proxy.com/" target="_blank" rel="external">http://cn-proxy.com/</a></li>
+<li>www.goubanjia.com/</li>
+<li>www.66ip.cn/</li>
+<li>www.youdaili.net/</li>
+<li>www.cnproxy.com/proxy1.html</li>
+<li>…</li>
+</ul>
+<p>从工具上着手（不满足需求，暂不考虑）；</p>
+<ul>
+<li>Proxy Hunter</li>
+<li>Proxy NOW系列</li>
+<li>SOCKS Cat</li>
+<li>…</li>
+</ul>
+<p>花钱买也是一种途径。</p>
+<h4 id="代理IP属性规划"><a href="#代理IP属性规划" class="headerlink" title="代理IP属性规划"></a>代理IP属性规划</h4><p>需要的IP属性如下：</p>
+<ul>
+<li>time    #时间</li>
+<li>ip    #ip地址</li>
+<li>port    #端口</li>
+<li>addr    #位置</li>
+<li>type    #代理类型</li>
+<li>speed    #速度</li>
+</ul>
+<h4 id="代理IP可用性"><a href="#代理IP可用性" class="headerlink" title="代理IP可用性"></a>代理IP可用性</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/14/2017-01-14-我的2016/" rel="next" title="我的2016">
+                <i class="fa fa-chevron-left"></i> 我的2016
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/11/2017-04-11-owasp-2017-top-10/" rel="prev" title="owasp-2017-top-10">
+                owasp-2017-top-10 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">bunny</p>
+            <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前期调研"><span class="nav-number">1.</span> <span class="nav-text">前期调研</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代理种类-引用wikipedia"><span class="nav-number">1.1.</span> <span class="nav-text">代理种类(引用wikipedia)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代理IP来源"><span class="nav-number">1.2.</span> <span class="nav-text">代理IP来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代理IP属性规划"><span class="nav-number">1.3.</span> <span class="nav-text">代理IP属性规划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代理IP可用性"><span class="nav-number">1.4.</span> <span class="nav-text">代理IP可用性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bunny</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

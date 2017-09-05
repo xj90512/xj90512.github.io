@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍vultr提供的vps上部署ss 优惠链接：http://www.vultr.com/?ref=7152024">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vultr-ss-部署">
+<meta property="og:url" content="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/index.html">
+<meta property="og:site_name" content="请叫我向公&#39;blog">
+<meta property="og:description" content="介绍vultr提供的vps上部署ss 优惠链接：http://www.vultr.com/?ref=7152024">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-07-10T07:01:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vultr-ss-部署">
+<meta name="twitter:description" content="介绍vultr提供的vps上部署ss 优惠链接：http://www.vultr.com/?ref=7152024">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/"/>
+
+
+
+
+
+  <title>vultr-ss-部署 | 请叫我向公'blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">请叫我向公'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bunny">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="请叫我向公'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vultr-ss-部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T15:45:20+08:00">
+                2017-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>vultr提供的vps上部署ss</p>
+<p>优惠链接：<a href="http://www.vultr.com/?ref=7152024" target="_blank" rel="external">http://www.vultr.com/?ref=7152024</a><br><a id="more"></a></p>
+<h3 id="注册支付"><a href="#注册支付" class="headerlink" title="注册支付"></a>注册支付</h3><p>官网地址：<a href="https://www.vultr.com" target="_blank" rel="external">https://www.vultr.com</a><br>注册完账号，登录账号进入服务页面，要求绑定信用卡或者使用paypal支付,根据优惠链接注册可以获取充多少送多少。</p>
+<h3 id="速度测试"><a href="#速度测试" class="headerlink" title="速度测试"></a>速度测试</h3><ol>
+<li>当我们充值完成后，不要急着部署vps，我们可以先测试下各线路速度情况，根据最优速度来选择我们的机房线路</li>
+<li>官网提供了下载文件和ping测速2种方式，地址：<a href="https://www.vultr.com/faq/#downloadspeedtests" target="_blank" rel="external">https://www.vultr.com/faq/#downloadspeedtests</a></li>
+<li>根据你的测试结果得到你要部署的机房路线</li>
+</ol>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><ol>
+<li>支付完毕后，回到Vulrt的界面，点击右侧的＋号，部署(deploy)一个新的VPS(虚拟服务器)。</li>
+<li>名字自己取，IP选择你速度测试结果国家，操作系统选择CentOS 7，套餐选$2.5/月的。点生成</li>
+<li>之后跳转到管理页面，当显示绿色的running时，该VPS就部署好了</li>
+<li>点击该VPS，进入管理页面，可以看到VPS的IP，在VPS管理页面点那个眼睛，可以看到你的ROOT账户的密码。</li>
+</ol>
+<h3 id="服务器端操作"><a href="#服务器端操作" class="headerlink" title="服务器端操作"></a>服务器端操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">ssh root@IP_address</div><div class="line">#利用SSH登陆 ROOT账户，然后输入yes，输入密码，密码在此台vps管理页面的Password:</div><div class="line">#后面两个正方形，点击＝复制密码</div><div class="line">#当光标变成[ROOT@vultr ~]就说明当前你用ROOT账户登录VPS成功，</div><div class="line">#通过@vultr 前的字母来判定当前是哪个账户</div><div class="line"></div><div class="line">useradd A</div><div class="line">#建立非ROOT账户，A</div><div class="line"></div><div class="line">passwd A</div><div class="line">#为A设置密码，输入两次,此时ROOT账户和非ROOT账户置成功了，</div><div class="line">#在ROOT账户下可利用su A转到非ROOT账户</div><div class="line"></div><div class="line">echo -e &quot;\nA ALL=(ALL) ALL\n&quot; &gt;&gt; /etc/sudoers; tail -3 /etc/sudoers</div><div class="line">#赋予A sudo 权限</div><div class="line">#在A账户下利用 sudo su 可以转到ROOT账户</div><div class="line">#利用control+D来推出账户</div><div class="line"></div><div class="line">systemctl disable firewalld</div><div class="line">#移除firewall</div><div class="line"></div><div class="line">yum -y install iptables-services</div><div class="line">#安装防火墙</div><div class="line"></div><div class="line">systemctl enable iptables</div><div class="line">#加入系统</div><div class="line"></div><div class="line">yum -y install vim</div><div class="line">#安装编辑器vim</div><div class="line"></div><div class="line">rm -rf /etc/localtime; ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</div><div class="line">#把vps时间设定成北京时间</div><div class="line">#用命令 date 查看</div></pre></td></tr></table></figure>
+<h3 id="ssh-config"><a href="#ssh-config" class="headerlink" title="ssh config"></a>ssh config</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">vim /etc/ssh/sshd_config</div><div class="line">#编辑 config 文件，按i编辑</div><div class="line"></div><div class="line">利用滚轮下翻，确保各条目所示的状态和下面对应(去掉注释符号#及注释内容)</div><div class="line"></div><div class="line">将 #Port 22改为                    Port 11011    #改默认端口为XXX，XXX为数字，第18行</div><div class="line">PermitRootLogin                    no           #禁止 ROOT 通过SSH登陆，第50行</div><div class="line">RSAAuthentication                  yes          #允许 RSA 认证，第55行</div><div class="line">PubkeyAuthentication               yes          #允许公钥认证，第56行</div><div class="line">PermitEmptyPasswords               no           #禁止空密码登陆，第79行</div><div class="line">PasswordAuthentication             no           #禁止密码登陆，第80行</div><div class="line">ChallengeResponseAuthentication    no           #禁止使用任何的密码登陆，第84行</div><div class="line"></div><div class="line">按 esc 退出编辑，输入:wq  </div><div class="line">#保存并退出 sshd_config</div><div class="line"></div><div class="line">chkconfig iptables on </div><div class="line">#将 iptables 加入到系统服务，随系统启动而启动</div><div class="line"></div><div class="line">service iptables start </div><div class="line">#直接启动 iptables 服务</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">iptables -I OUTPUT -p tcp --sport XXXX -j ACCEPT</div><div class="line">#开放刚才改掉的端口，以免以后无法登陆A账户和ROOT账户，XXX表示之前设置的端口</div><div class="line"></div><div class="line">service iptables save  </div><div class="line">#保存更改</div><div class="line"></div><div class="line">service sshd restart</div><div class="line">##重启 SSH</div><div class="line"></div><div class="line">#iptables命令示例</div><div class="line">#iptables -D INPUT 5    #删除INPUT 中第五条规则</div><div class="line">#iptables -I INPUT 6    #新建规则插入到INPUT中 为第6条</div></pre></td></tr></table></figure>
+<h3 id="fail2ban"><a href="#fail2ban" class="headerlink" title="fail2ban"></a>fail2ban</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">sudo su </div><div class="line">#输密码，转回ROOT，密码在第3步中已设置</div><div class="line"></div><div class="line">yum -y install epel-release; yum -y install fail2ban</div><div class="line">#安装fail2ban</div><div class="line"></div><div class="line">cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local</div><div class="line">#复制配置文件</div><div class="line"></div><div class="line">vim /etc/fail2ban/jail.local</div><div class="line">#按i编辑配置文件</div><div class="line"></div><div class="line">[DEFAULT]  #找到第41行，之后对照修改成下面的样子</div><div class="line"></div><div class="line"># &quot;ignoreip&quot; can be an IP address, a CIDR mask or a DNS host. Fail2ban will not</div><div class="line"># ban a host which matches an address in this list. Several addresses can be</div><div class="line"># defined using space separator.</div><div class="line">ignoreip = 127.0.0.1</div><div class="line"></div><div class="line"># &quot;bantime&quot; is the number of seconds that a host is banned.</div><div class="line">bantime  = 3600</div><div class="line"></div><div class="line"># A host is banned if it has generated &quot;maxretry&quot; during the last &quot;findtime&quot;</div><div class="line"># seconds.</div><div class="line">findtime  = 600</div><div class="line"></div><div class="line"># &quot;maxretry&quot; is the number of failures before a host get banned.</div><div class="line">maxretry = 3</div><div class="line"></div><div class="line">backend = polling  </div><div class="line">#backend这个要设置为polling，默认是auto</div><div class="line">#找到223行，回车，黏贴下面的内容，其中XXX第7步中修改后的端口</div><div class="line"></div><div class="line">[ssh-iptables]</div><div class="line">enabled  = true</div><div class="line">filter   = sshd</div><div class="line">action   = iptables[name=SSH, port=xxx, protocol=tcp]</div><div class="line">           sendmail-whois[name=SSH, dest=root, sender=fail2ban@example.com]</div><div class="line">logpath  = /var/log/secure</div><div class="line">maxretry = 10</div><div class="line"></div><div class="line">按 esc 退出编辑，:wq  #保存并退出</div><div class="line"></div><div class="line">chkconfig --level 23 fail2ban on; service fail2ban start</div><div class="line">#启动 fail2ban</div><div class="line"></div><div class="line">iptables -L -nv --line-number</div><div class="line">#查看是否启动，正常启动则如下所示</div><div class="line">#num   pkts bytes target     prot opt in     out     source               destination         </div><div class="line">#1     1922  189K f2b-SSH    tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:第七步中的端口</div></pre></td></tr></table></figure>
+<h3 id="安装Shadowsocks"><a href="#安装Shadowsocks" class="headerlink" title="安装Shadowsocks"></a>安装Shadowsocks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">#开放SS中的端口，XXXX为刚才所设的&quot;server_port&quot;:XXX端口</div><div class="line"></div><div class="line">service iptables save</div><div class="line">#保存iptables的更改</div></pre></td></tr></table></figure>
+<h3 id="安装FS"><a href="#安装FS" class="headerlink" title="安装FS"></a>安装FS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">rm -f install_fs.sh; wget https://raw.githubusercontent.com/ugukkylbklaom/Vultr-SS-Firewall/master/install_fs.sh; chmod +x install_fs.sh; ./install_fs.sh 2&gt;&amp;1 | tee install.log</div><div class="line">#一键安装，需要按y确认</div><div class="line">#查看日志，如果有success字样则表示成功安装。按ctrl+c退出</div><div class="line"></div><div class="line">chmod +x /etc/rc.local</div><div class="line">#设置开机启动</div><div class="line"></div><div class="line">vim /etc/rc.local</div><div class="line">#按i编辑，另起一行，加入一条 sh /fs/start.sh</div><div class="line">#然后按ESC推出，输入 :wq  保存 退出</div><div class="line"></div><div class="line">crontab -e</div><div class="line">#编辑crontab</div><div class="line">#按i编辑</div><div class="line"></div><div class="line">0 3 * * *  sh /fs/restart.sh</div><div class="line">#每天晚上3点自动重启</div><div class="line">#然后按ESC推出，输入 :wq  保存 退出</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">iptables -I OUTPUT -p tcp --sport XXXX -j ACCEPT</div><div class="line">#开放第7步改掉的端口，以免以后无法登陆A账户和ROOT账户，XXX表示之前设置的端口</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">#开放SS中的端口，XXXX为第10步所设的&quot;server_port&quot;:XXX端口</div><div class="line"></div><div class="line">service iptables save  </div><div class="line">#保存更改</div><div class="line"></div><div class="line">service sshd restart</div><div class="line">##重启 SSH</div><div class="line"></div><div class="line">iptables -L -nv --line-number</div><div class="line">#查看iptables</div></pre></td></tr></table></figure>
+<h3 id="TCP-Fast-Open"><a href="#TCP-Fast-Open" class="headerlink" title="TCP Fast Open"></a>TCP Fast Open</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">如果有连接进来，使用如下命令查看：</div><div class="line"># grep &apos;^TcpExt:&apos; /proc/net/netstat | cut -d &apos; &apos; -f 91-96 | column -t</div></pre></td></tr></table></figure>
+<h3 id="安装bbr"><a href="#安装bbr" class="headerlink" title="安装bbr"></a>安装bbr</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">建议使用BBR透明并且使用方便，BBR作为现在TCP比较好的拥塞控制协议，通过对于带宽和网络延迟的交替估计更加准确控制发送窗口的大小。</div><div class="line">Centos7开启方法：</div><div class="line">1.更新系统yum update -y</div><div class="line">2.安装内核 rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</div><div class="line">rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</div><div class="line">yum --enablerepo=elrepo-kernel install kernel-ml</div><div class="line">3.查看安装内核并设置awk -F\&apos; &apos;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&apos; /etc/grub2.cfg</div><div class="line">返回结果应该如下：0 : CentOS Linux (4.9.10-1.el7.elrepo.x86_64) 7 (Core)</div><div class="line">1 : CentOS Linux (3.10.0-514.2.2.el7.x86_64) 7 (Core)</div><div class="line">2 : CentOS Linux (4.9.0-1.el7.elrepo.x86_64) 7 (Core)</div><div class="line">3 : CentOS Linux (3.10.0-327.36.3.el7.x86_64) 7 (Core)</div><div class="line">4 : CentOS Linux (3.10.0-327.36.2.el7.x86_64) 7 (Core)</div><div class="line">5 : CentOS Linux (3.10.0-327.28.3.el7.x86_64) 7 (Core)</div><div class="line">6 : CentOS Linux (3.10.0-327.28.2.el7.x86_64) 7 (Core)</div><div class="line">启动设置 （0号位需要启动的内核，默认安装内核均是0）grub2-set-default 0</div><div class="line">4. 重启 reboot</div><div class="line">5.开启BBR查看内核uname -a</div><div class="line">编辑/etc/sysctl.confecho &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf</div><div class="line">echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf</div><div class="line">保存执行 sysctl -p </div><div class="line">查看是否开启lsmod | grep bbr</div></pre></td></tr></table></figure>
+<h3 id="阻止百度收录真实位置"><a href="#阻止百度收录真实位置" class="headerlink" title="阻止百度收录真实位置"></a>阻止百度收录真实位置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">0.0.0.0 api.map.baidu.com</div><div class="line">0.0.0.0 ps.map.baidu.com</div><div class="line">0.0.0.0 sv.map.baidu.com</div><div class="line">0.0.0.0 offnavi.map.baidu.com</div><div class="line">0.0.0.0 newvector.map.baidu.com</div><div class="line">0.0.0.0 ulog.imap.baidu.com</div><div class="line">0.0.0.0 newloc.map.n.shifen.com</div><div class="line">:: api.map.baidu.com</div><div class="line">:: ps.map.baidu.com</div><div class="line">:: sv.map.baidu.com</div><div class="line">:: offnavi.map.baidu.com</div><div class="line">:: newvector.map.baidu.com</div><div class="line">:: ulog.imap.baidu.com</div><div class="line">:: newloc.map.n.shifen.com</div></pre></td></tr></table></figure>
+<h3 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">允许 SSR端口 以888 xxx 为例 你有几个端口，就添加几个</div><div class="line"></div><div class="line">iptables -A INPUT -p tcp -s 0/0 --dport 888 -j ACCEPT</div><div class="line">iptables -A OUTPUT -p tcp --sport 888 -m state --state ESTABLISHED -j ACCEPT</div><div class="line"></div><div class="line">iptables -A INPUT -p tcp -s 0/0 --dport xxx -j ACCEPT</div><div class="line">iptables -A OUTPUT -p tcp --sport xxx -m state --state ESTABLISHED -j ACCEPT</div></pre></td></tr></table></figure>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ifconfig eth0</div><div class="line">#查阅vps的ip</div><div class="line"></div><div class="line">ssserver -c /etc/shadowsocks.json  -d restart; tail  -f -n 20 /var/log/shadowsocks.log</div><div class="line">#重启SS+查看最后20行</div><div class="line"></div><div class="line">ls -la | sed &quot;s:^:`pwd`/:&quot;</div><div class="line"># 列出文件夹内所有文件的绝对路径</div><div class="line"></div><div class="line">pip show shadowsocks</div><div class="line">#查看当前版本</div><div class="line"></div><div class="line">sh /fs/restart.sh; tail -f -n 20 /fs/server.log</div><div class="line">#重启＋查看日志最后20行</div><div class="line"></div><div class="line">iptables -D INPUT X #删除INPUT </div><div class="line">iptables -I INPUT X  #新建规则插入到第六6条</div><div class="line">iptables -A INPUT -p all -j REJECT</div><div class="line"></div><div class="line">sudo ssserver -c /etc/shadowsocks.json  -d stop #停止SS</div></pre></td></tr></table></figure>
+<h3 id="python"><a href="#python" class="headerlink" title="python"></a>python</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">安装依赖包：</div><div class="line">apt-get install build-essential checkinstall</div><div class="line">apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev </div><div class="line">python下载：</div><div class="line">https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz</div><div class="line">https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz</div><div class="line">编译安装：</div><div class="line">./configure --prefix=/usr/local/python/2.7.xx</div><div class="line"> make altinstall</div></pre></td></tr></table></figure>
+<h3 id="shadowsocks"><a href="#shadowsocks" class="headerlink" title="shadowsocks"></a>shadowsocks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">安装脚本：</div><div class="line">https://github.com/ToyoDAdoubi/doubi/blob/master/ssr.sh</div><div class="line">自启动服务：</div><div class="line">chmod 755 /etc/init.d/ssr ; update-rc.d ssr defaults ; service ssr start</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/27/2017-04-27-github安全工具收集/" rel="next" title="github安全工具收集">
+                <i class="fa fa-chevron-left"></i> github安全工具收集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/18/2017-06-18-iterm2使用教程/" rel="prev" title="iterm2使用教程">
+                iterm2使用教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">bunny</p>
+            <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册支付"><span class="nav-number">2.</span> <span class="nav-text">注册支付</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#速度测试"><span class="nav-number">3.</span> <span class="nav-text">速度测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署"><span class="nav-number">4.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器端操作"><span class="nav-number">5.</span> <span class="nav-text">服务器端操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh-config"><span class="nav-number">6.</span> <span class="nav-text">ssh config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fail2ban"><span class="nav-number">7.</span> <span class="nav-text">fail2ban</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Shadowsocks"><span class="nav-number">8.</span> <span class="nav-text">安装Shadowsocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装FS"><span class="nav-number">9.</span> <span class="nav-text">安装FS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-Fast-Open"><span class="nav-number">10.</span> <span class="nav-text">TCP Fast Open</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装bbr"><span class="nav-number">11.</span> <span class="nav-text">安装bbr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阻止百度收录真实位置"><span class="nav-number">12.</span> <span class="nav-text">阻止百度收录真实位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iptables"><span class="nav-number">13.</span> <span class="nav-text">iptables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">14.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python"><span class="nav-number">15.</span> <span class="nav-text">python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shadowsocks"><span class="nav-number">16.</span> <span class="nav-text">shadowsocks</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bunny</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
