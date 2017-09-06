@@ -434,7 +434,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/23/osquery-for-security/" itemprop="url">osquery-for-security</a></h1>
+                <a class="post-title-link" href="/2017/06/23/osquery-for-security/" itemprop="url">osquery for security</a></h1>
         
 
         <div class="post-meta">
@@ -456,6 +456,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/security/" itemprop="url" rel="index">
+                    <span itemprop="name">security</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -485,37 +507,16 @@
 
       
         
-          
-            <h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><p><a href="https://github.com/mwielgoszewski/doorman" target="_blank" rel="external">https://github.com/mwielgoszewski/doorman</a></p>
+          <h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><p><a href="https://github.com/mwielgoszewski/doorman" target="_blank" rel="external">https://github.com/mwielgoszewski/doorman</a></p>
 <p><a href="https://osquery.io" target="_blank" rel="external">https://osquery.io</a></p>
-<p><a href="https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/" target="_blank" rel="external">https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/</a></p>
-<p><a href="https://osquery.io/docs/tables/" target="_blank" rel="external">https://osquery.io/docs/tables/</a></p>
-<p><a href="https://medium.com/@clong/osquery-for-security-b66fffdf2daf" target="_blank" rel="external">https://medium.com/@clong/osquery-for-security-b66fffdf2daf</a></p>
-<p><a href="https://github.com/kolide/kolide-archive" target="_blank" rel="external">https://github.com/kolide/kolide-archive</a></p>
-<p><a href="https://github.com/mephux/envdb" target="_blank" rel="external">https://github.com/mephux/envdb</a>    图形化的osquery查询</p>
-<h3 id="install"><a href="#install" class="headerlink" title="install"></a>install</h3><p>具体安装过程看官方文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B</div><div class="line">sudo add-apt-repository &quot;deb [arch=amd64] https://osquery-packages.s3.amazonaws.com/deb deb main&quot;</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install osquery</div></pre></td></tr></table></figure>
-<p>other way:</p>
-<pre><code>bunny:~# wget https://osquery-packages.s3.amazonaws.com/deb/osquery_2.5.0_1.linux.amd64.deb
-bunny:~# dpkg -i osquery_2.5.0_1.linux.amd64.deb 
-bunny:~# cp /usr/share/osquery/osquery.example.conf /etc/osquery/osquery.conf
-bunny:~# service osqueryd start
-bunny:~# osqueryctl status
-</code></pre><h3 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h3><h4 id="osqueryi"><a href="#osqueryi" class="headerlink" title="osqueryi"></a>osqueryi</h4><p>osqueryi是osquery交互式查询shell。它是完全独立的，不与守护进程通信，也不需要作为管理员运行。使用shell对查询进行原型查询，并探索操作系统的当前状态</p>
-<p>使用方式：</p>
-<pre><code>1.直接命令行方式：
-#osqueryi
-2.json、csv导出方式：
-osqueryi --json &quot;SELECT * FROM routes WHERE destination = &apos;::1&apos;&quot;
-3.管道方式：
-echo &quot;SELECT * FROM routes WHERE destination = &apos;::1&apos;;&quot; | osqueryi --json
-</code></pre><h4 id="osqueryd"><a href="#osqueryd" class="headerlink" title="osqueryd"></a>osqueryd</h4><p>osqueryd是主机监控程序，允许您安排查询和记录系统状态的变化。后台程序随着时间的推移聚合查询结果并生成日志，根据每个查询指示状态更改。守护进程也使用操作系统的API监测事件记录文件和目录的变化，硬件事件，网络事件等。</p>
-<h4 id="osqueryctl"><a href="#osqueryctl" class="headerlink" title="osqueryctl"></a>osqueryctl</h4><p>osqueryctl是辅助脚本包括osquery，让你轻松启动/停止/启动osqueryd服务</p>
-<pre><code>$ sudo osqueryctl
-Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
-</code></pre><h3 id="doorman"><a href="#doorman" class="headerlink" title="doorman"></a>doorman</h3><p>osquary快捷管理工具</p>
-
-          
+<p><a href="https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/" target="_blank" rel="external">https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/</a><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/23/osquery-for-security/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1619,7 +1620,7 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
