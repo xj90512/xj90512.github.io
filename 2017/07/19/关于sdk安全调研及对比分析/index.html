@@ -79,11 +79,13 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="sdk," />
 
 
 
 
+
+  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
 
 
 
@@ -95,17 +97,18 @@
 
 
 
-<meta name="description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。 sdk有哪些作用广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其">
+<meta name="description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。">
+<meta name="keywords" content="sdk">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于sdk安全调研及对比分析">
 <meta property="og:url" content="http://pyscan.me/2017/07/19/关于sdk安全调研及对比分析/index.html">
 <meta property="og:site_name" content="请叫我向公&#39;blog">
-<meta property="og:description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。 sdk有哪些作用广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其">
+<meta property="og:description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-20T07:19:22.000Z">
+<meta property="og:updated_time" content="2017-09-05T02:57:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于sdk安全调研及对比分析">
-<meta name="twitter:description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。 sdk有哪些作用广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其">
+<meta name="twitter:description" content="什么是sdkSDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。 Android SDK 指的是Android专属的软件开发工具包。">
 
 
 
@@ -205,6 +208,56 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -241,9 +294,9 @@
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/07/19/关于sdk安全调研及对比分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -306,7 +359,7 @@
 
       
         <h3 id="什么是sdk"><a href="#什么是sdk" class="headerlink" title="什么是sdk"></a>什么是sdk</h3><p>SDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。</p>
-<p>Android SDK 指的是Android专属的软件开发工具包。</p>
+<p>Android SDK 指的是Android专属的软件开发工具包。<br><a id="more"></a></p>
 <h3 id="sdk有哪些作用"><a href="#sdk有哪些作用" class="headerlink" title="sdk有哪些作用"></a>sdk有哪些作用</h3><p>广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其提供的服务而开发的工具包，封装了一些复杂的逻辑实现以及请求，响应解析的API</p>
 <h3 id="从哪些方面对比"><a href="#从哪些方面对比" class="headerlink" title="从哪些方面对比"></a>从哪些方面对比</h3><h3 id="有哪些安全问题"><a href="#有哪些安全问题" class="headerlink" title="有哪些安全问题"></a>有哪些安全问题</h3><p>一些恶意的Sdk本身会存在着安全威胁，除了众所周知的获取用户隐私信息，如收集设备id（IMEI，IMSI等）、获取用户位置信息外，还存在着更严重的安全问题。比如某些sdk具有主动接收服务器指令的功能，它会根据需要收集短信、通话记录和联系人等敏感信息。另外，它还会执行如动态下载代码等危险操作。</p>
 <p>Sdk自身可能还会存在漏洞。如果这些漏洞被利用，攻击者就能够利用sdk本身存在的强大功能发动恶意的攻击行为，例如在用户毫无察觉的情况下打开相机拍照，通过发送短信盗取双因素认证令牌，或将设备变成僵尸网络的一部分。<br>下面介绍下目前在第三方sdk（主要是指广告sdk）中发现的恶意行为和漏洞。</p>
@@ -350,10 +403,45 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>支持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpeg" alt="请叫我向公 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpeg" alt="请叫我向公 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sdk/" rel="tag"># sdk</a>
+          
+        </div>
       
 
       
@@ -437,7 +525,11 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
-            <p class="site-author-name" itemprop="name">bunny</p>
+            <img class="site-author-image" itemprop="image"
+              src="/images/avatar.png"
+              alt="请叫我向公" />
+          
+            <p class="site-author-name" itemprop="name">请叫我向公</p>
             <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
         </div>
 
@@ -446,7 +538,7 @@
           
             <div class="site-state-item site-state-posts">
             
-              <a href="/archives">
+              <a href="/archives/">
             
                 <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
@@ -455,14 +547,59 @@
           
 
           
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
           
 
         </nav>
 
         
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xj90512" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Bunny_jie" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/asone520" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>微博</a>
+              </span>
+            
           
         </div>
 
@@ -509,12 +646,12 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
+  &copy;  2016 &mdash; 
   <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">bunny</span>
+  <span class="author" itemprop="copyrightHolder">请叫我向公</span>
 
   
 </div>
@@ -567,7 +704,12 @@
   
 
 
+  
 
+
+
+  
+  
 
 
 
@@ -594,6 +736,15 @@
 
   
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
 
 
   

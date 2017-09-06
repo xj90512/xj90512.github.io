@@ -1,0 +1,1140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>请叫我向公&#39;blog</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://pyscan.me/"/>
+  <updated>2017-09-05T02:57:22.000Z</updated>
+  <id>http://pyscan.me/</id>
+  
+  <author>
+    <name>请叫我向公</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于sdk安全调研及对比分析</title>
+    <link href="http://pyscan.me/2017/07/19/%E5%85%B3%E4%BA%8Esdk%E5%AE%89%E5%85%A8%E8%B0%83%E7%A0%94%E5%8F%8A%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90/"/>
+    <id>http://pyscan.me/2017/07/19/关于sdk安全调研及对比分析/</id>
+    <published>2017-07-19T08:35:15.000Z</published>
+    <updated>2017-09-05T02:57:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="什么是sdk"><a href="#什么是sdk" class="headerlink" title="什么是sdk"></a>什么是sdk</h3><p>SDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。</p>
+<p>Android SDK 指的是Android专属的软件开发工具包。<br><a id="more"></a></p>
+<h3 id="sdk有哪些作用"><a href="#sdk有哪些作用" class="headerlink" title="sdk有哪些作用"></a>sdk有哪些作用</h3><p>广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其提供的服务而开发的工具包，封装了一些复杂的逻辑实现以及请求，响应解析的API</p>
+<h3 id="从哪些方面对比"><a href="#从哪些方面对比" class="headerlink" title="从哪些方面对比"></a>从哪些方面对比</h3><h3 id="有哪些安全问题"><a href="#有哪些安全问题" class="headerlink" title="有哪些安全问题"></a>有哪些安全问题</h3><p>一些恶意的Sdk本身会存在着安全威胁，除了众所周知的获取用户隐私信息，如收集设备id（IMEI，IMSI等）、获取用户位置信息外，还存在着更严重的安全问题。比如某些sdk具有主动接收服务器指令的功能，它会根据需要收集短信、通话记录和联系人等敏感信息。另外，它还会执行如动态下载代码等危险操作。</p>
+<p>Sdk自身可能还会存在漏洞。如果这些漏洞被利用，攻击者就能够利用sdk本身存在的强大功能发动恶意的攻击行为，例如在用户毫无察觉的情况下打开相机拍照，通过发送短信盗取双因素认证令牌，或将设备变成僵尸网络的一部分。<br>下面介绍下目前在第三方sdk（主要是指广告sdk）中发现的恶意行为和漏洞。</p>
+<h4 id="恶意行为"><a href="#恶意行为" class="headerlink" title="恶意行为"></a>恶意行为</h4><pre><code>收集用于定位和追踪用户的信息，如设备id和位置信息，
+收集用户的邮箱地址以及安装在用户设备上的应用程序列表。
+读取短信、邮件、电话通话记录和联系人列表，在没有任何访问控制措施的情况下通过web服务公开共享这些数据。
+接收远程服务器指令，下载任意代码并执行。
+数据明文传输
+</code></pre><h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><pre><code>通过明文传输数据
+</code></pre><p>　　通过HTTP明文传输用户的隐私信息，使隐私信息很容易被窃取。FireEye 的研究者声称在Google Play的主流应用中有47%的广告sdk存在该漏洞。</p>
+<pre><code>使用HTTP协议传输数据
+</code></pre><p>使用不安全的HTTP协议从控制服务器接收命令或者动态加载代码。攻击者可以通过中间人攻击，劫持HTTP数据包，冒充服务器下发恶意指令、推送恶意代码，将第三方sdk变成一个僵尸网络。</p>
+<pre><code>Webview漏洞
+</code></pre><p>WebView相当于一个浏览器窗口，应用程序可以使用它来显示网页内容。addJavascriptInterface这个API允许运行在WebView中的JavaScript代码来访问应用的native功能。攻击者可以利用此漏洞，使用应用已有的权限，通过恶意的JavaScript代码来对设备进行恶意操作。这个漏洞已经影响到超过90％的Android设备了。</p>
+<pre><code>使用动态加载的方式进行升级
+</code></pre><p>采用运行时动态加载技术在Dalvik虚拟机中动态执行代码作为其升级机制的一部分，却没有对动态加载的代码进行校验。如果该部分代码被黑客恶意篡改，则会给用户造成严重的安全威胁。</p>
+<h3 id="各厂商sdk对比情况"><a href="#各厂商sdk对比情况" class="headerlink" title="各厂商sdk对比情况"></a>各厂商sdk对比情况</h3><h3 id="如何提高安全性"><a href="#如何提高安全性" class="headerlink" title="如何提高安全性"></a>如何提高安全性</h3><pre><code>关键核心功能实现隐藏
+</code></pre><p>java代码实现代码很容易被反编译，转而用Ndk实现，提高反编译难度，进一步可以通过加固so文件加密，从而更难被反编译查看。可以参考<a href="http://www.cnblogs.com/lanrenxinxin/p/4962470.html" target="_blank" rel="external">http://www.cnblogs.com/lanrenxinxin/p/4962470.html</a></p>
+<pre><code>文件加密及Sdk加壳加固 
+</code></pre><p>Sdk中dex文件和so文件加密从而屏蔽外部窥探，提高反编译难度。并且进一步通过jni本地方法来屏蔽核心方法，在so文件内解密dex文件并加载，Sdk暴露的接口全部通过jni来跳转或者通过反射跳转到核心dex内实现。</p>
+<pre><code>网络安全 
+</code></pre><p>如果网络请求不安全，直接被抓包，接口和参数直接被窥探从而被模拟，提高安全的话直接用https，如果条件不允许，那至少得加密传输，对参数加密，加密算法必须得so文件来实现。同时配合服务端做一些防刷，有限性鉴定。</p>
+<pre><code>方法调用栈检查 
+</code></pre><p>如果不对调用栈入口检查，就会出现方法被肆意调用，用户不受控制的调用干扰调用流程，如上述直接去掉sdk调用中出现的界面，所以可以直接在某个方法入口处先检查下此时的调用栈顺序是否符合流程的设计，可以检查下第一个入口，以及后上方的几个入口是否为设定的流程。</p>
+<pre><code>方法入口统一扎口
+</code></pre><p>Java实现方法在sdk，总能通过反射任意调用各个方法，单独使用某个方法来实现某个功能，所以假如我们经常为了共用功能而经常封装成单独方法，这样就为避开sdk设计的流程而单独调用提供了机会，这时会有人会说那我把所有的功能用一个方法实现来达到避免流程干扰，这样显示不切实际，那样的代码又长又臭，没有人敢来维护。即使如此，有个工具通过javassit来实现注入代码从而干扰代码执行流程。那到底有没有好点的办法来统一扎口呢？个人觉得比较好的方式就是通过Ndk来实现封装，毕竟jni接口入口可以独立出来使用，比起java代码反编难度大，调试难，又不好注入代码，更难随意调用ndk内部c++实现的相关方法。<br>用一个jni入口暴露出来给java层调用，内部封装整个流程，很好避开大部分破解流程。</p>
+<pre><code>云方案 
+
+调用鉴权 
+</code></pre><p>主要可以分为静态鉴权和动态鉴权。前者主要是用来检查固定参数，如appKey和appSecret，以及结合限定应用包名（packageName）和应用名(appName)达非到限定sdk被未经授权而扩散使用。<br>上述这种仅仅是用来限制非正常的正式使用扩散，而不能约束用户尝试性窥探从而加大用户的破解难度。如果对sdk的调用使用可以直接通过accessCode方式以及Sdk加密从而进一步打消窥探和破解的念头，让每一次调用都不可重复，从而加大调试的难度和复杂性。</p>
+<pre><code>字符混淆以及字典混淆
+</code></pre><p>字符混淆用来对抗反编译工具，让字符常量不显示或着显示成16进制数组。<br>详细见这边文章：<a href="http://bobao.360.cn/learning/detail/3704.html?spm=a313e.7916648.0.0.11b0b6cqnOKtJ" target="_blank" rel="external">http://bobao.360.cn/learning/detail/3704.html?spm=a313e.7916648.0.0.11b0b6cqnOKtJ</a><br>字典混淆是指通常混淆字典都是abc…可以通过配置特殊字典，让反编译者看得怀疑人生</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.cnblogs.com/goodhacker/p/4708318.html" target="_blank" rel="external">http://www.cnblogs.com/goodhacker/p/4708318.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;什么是sdk&quot;&gt;&lt;a href=&quot;#什么是sdk&quot; class=&quot;headerlink&quot; title=&quot;什么是sdk&quot;&gt;&lt;/a&gt;什么是sdk&lt;/h3&gt;&lt;p&gt;SDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。&lt;/p&gt;
+&lt;p&gt;Android SDK 指的是Android专属的软件开发工具包。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="sdk" scheme="http://pyscan.me/tags/sdk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>osquery-for-security</title>
+    <link href="http://pyscan.me/2017/06/23/osquery-for-security/"/>
+    <id>http://pyscan.me/2017/06/23/osquery-for-security/</id>
+    <published>2017-06-23T09:56:16.000Z</published>
+    <updated>2017-07-10T07:52:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><p><a href="https://github.com/mwielgoszewski/doorman" target="_blank" rel="external">https://github.com/mwielgoszewski/doorman</a></p>
+<p><a href="https://osquery.io" target="_blank" rel="external">https://osquery.io</a></p>
+<p><a href="https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/" target="_blank" rel="external">https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/</a></p>
+<p><a href="https://osquery.io/docs/tables/" target="_blank" rel="external">https://osquery.io/docs/tables/</a></p>
+<p><a href="https://medium.com/@clong/osquery-for-security-b66fffdf2daf" target="_blank" rel="external">https://medium.com/@clong/osquery-for-security-b66fffdf2daf</a></p>
+<p><a href="https://github.com/kolide/kolide-archive" target="_blank" rel="external">https://github.com/kolide/kolide-archive</a></p>
+<p><a href="https://github.com/mephux/envdb" target="_blank" rel="external">https://github.com/mephux/envdb</a>    图形化的osquery查询</p>
+<h3 id="install"><a href="#install" class="headerlink" title="install"></a>install</h3><p>具体安装过程看官方文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B</div><div class="line">sudo add-apt-repository &quot;deb [arch=amd64] https://osquery-packages.s3.amazonaws.com/deb deb main&quot;</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install osquery</div></pre></td></tr></table></figure>
+<p>other way:</p>
+<pre><code>bunny:~# wget https://osquery-packages.s3.amazonaws.com/deb/osquery_2.5.0_1.linux.amd64.deb
+bunny:~# dpkg -i osquery_2.5.0_1.linux.amd64.deb 
+bunny:~# cp /usr/share/osquery/osquery.example.conf /etc/osquery/osquery.conf
+bunny:~# service osqueryd start
+bunny:~# osqueryctl status
+</code></pre><h3 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h3><h4 id="osqueryi"><a href="#osqueryi" class="headerlink" title="osqueryi"></a>osqueryi</h4><p>osqueryi是osquery交互式查询shell。它是完全独立的，不与守护进程通信，也不需要作为管理员运行。使用shell对查询进行原型查询，并探索操作系统的当前状态</p>
+<p>使用方式：</p>
+<pre><code>1.直接命令行方式：
+#osqueryi
+2.json、csv导出方式：
+osqueryi --json &quot;SELECT * FROM routes WHERE destination = &apos;::1&apos;&quot;
+3.管道方式：
+echo &quot;SELECT * FROM routes WHERE destination = &apos;::1&apos;;&quot; | osqueryi --json
+</code></pre><h4 id="osqueryd"><a href="#osqueryd" class="headerlink" title="osqueryd"></a>osqueryd</h4><p>osqueryd是主机监控程序，允许您安排查询和记录系统状态的变化。后台程序随着时间的推移聚合查询结果并生成日志，根据每个查询指示状态更改。守护进程也使用操作系统的API监测事件记录文件和目录的变化，硬件事件，网络事件等。</p>
+<h4 id="osqueryctl"><a href="#osqueryctl" class="headerlink" title="osqueryctl"></a>osqueryctl</h4><p>osqueryctl是辅助脚本包括osquery，让你轻松启动/停止/启动osqueryd服务</p>
+<pre><code>$ sudo osqueryctl
+Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
+</code></pre><h3 id="doorman"><a href="#doorman" class="headerlink" title="doorman"></a>doorman</h3><p>osquary快捷管理工具</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;osquery&quot;&gt;&lt;a href=&quot;#osquery&quot; class=&quot;headerlink&quot; title=&quot;osquery&quot;&gt;&lt;/a&gt;osquery&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/mwielgoszewski/doorman
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>2017-06-20-celery使用教程</title>
+    <link href="http://pyscan.me/2017/06/20/2017-06-20-celery%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
+    <id>http://pyscan.me/2017/06/20/2017-06-20-celery使用教程/</id>
+    <published>2017-06-20T09:36:49.000Z</published>
+    <updated>2017-06-23T09:37:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Celery是一个异步任务的调度工具。它是Python写的库，但是它实现的通讯协议也可以使用ruby，php，javascript等调用。<br><a id="more"></a></p>
+<h4 id="任务类型"><a href="#任务类型" class="headerlink" title="任务类型"></a>任务类型</h4><ol>
+<li>异步任务</li>
+<li>定时任务</li>
+<li>周期任务</li>
+<li>链式任务</li>
+</ol>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>Worker: worker 是一个独立的进程，它持续监视队列中是否有需要处理的任务；</p>
+<p>Broker: broker 也被称为中间人或者协调者，broker 负责协调客户端和 worker 的沟通。客户端向 队列添加消息，broker 负责把消息派发给 worker。</p>
+<p>Result Stores / backend:    顾名思义就是结果储存的地方，队列中的任务运行完后的结果或者状态需要被任务发送者知道，那么就需要一个地方储存这些结果，常见的 backend 有 redis、Memcached 甚至常用的数据都可以。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>celery 支持多种 broker, 但主要以 RabbitMQ 和 Redis 为主</p>
+<p>安装celery：<br><code>pip install celery</code></p>
+<p>安装redis：<br><code>apt-get install redis-server</code></p>
+<p><code>pip install redis</code></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h3 id="celery-flower"><a href="#celery-flower" class="headerlink" title="celery flower"></a>celery flower</h3><h4 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h4><p>Flower是基于web的监控和管理<a href="http://www.celeryproject.org/" target="_blank" rel="external">Celery</a>的工具，通过web页面方式来监控、管理Celery，可以查看节点的状况(包括处理的队列信息等)和task的执行情况</p>
+<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><p>pip install flower</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>运行服务打开<a href="http://localhost:5555" target="_blank" rel="external">http://localhost:5555</a>:</p>
+<p><code>$ flower --port=5555</code></p>
+<p>从Celery运行:</p>
+<p><code>$ celery flower --address=127.0.0.1 --port=5555</code></p>
+<p>Broker URL和其他配置选项能够通过一个标准的Celery选项:</p>
+<p><code>$ celery flower --broker=amqp://guest:guest@localhost:5672//</code></p>
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><p>flower能够通过命令行配置:<code>$ flower --auto_refresh=False</code><br>使用 flowerconfig.py 配置文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Broker settings</div><div class="line">BROKER_URL = &apos;amqp://guest:guest@localhost:5672//&apos;</div><div class="line"></div><div class="line"># RabbitMQ management api</div><div class="line">broker_api = &apos;http://guest:guest@localhost:15672/api/&apos;</div><div class="line"></div><div class="line"># Enable debug logging</div><div class="line">logging = &apos;DEBUG&apos;</div></pre></td></tr></table></figure>
+<p>或者，使用环境变量，所有的flower选项应该以<code>FLOWER_</code>为前缀:<br><code>$ export FLOWER_BASIC_AUTH=foo:bar</code></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.celeryproject.org" target="_blank" rel="external">http://www.celeryproject.org</a></p>
+<p><a href="https://github.com/celery/celery" target="_blank" rel="external">https://github.com/celery/celery</a></p>
+<p><a href="http://flower-docs-cn.readthedocs.io/zh/latest/index.html" target="_blank" rel="external">http://flower-docs-cn.readthedocs.io/zh/latest/index.html</a></p>
+<p><a href="https://github.com/mher/flower" target="_blank" rel="external">https://github.com/mher/flower</a></p>
+<p><a href="https://flower.readthedocs.io/" target="_blank" rel="external">https://flower.readthedocs.io/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;Celery是一个异步任务的调度工具。它是Python写的库，但是它实现的通讯协议也可以使用ruby，php，javascript等调用。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>2017-06-20-crontab使用教程</title>
+    <link href="http://pyscan.me/2017/06/20/2017-06-20-crontab%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
+    <id>http://pyscan.me/2017/06/20/2017-06-20-crontab使用教程/</id>
+    <published>2017-06-20T08:44:58.000Z</published>
+    <updated>2017-06-20T09:48:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>crond是linux下用来周期性的执行某种任务或等待处理某些事件的一个守护进程，与windows下的计划任务类似，当安装完成操作系统后，默认会安装此服务工具，并且会自动启动crond进程，crond进程每分钟会定期检查是否有要执行的任务，如果有要执行的任务，则自动执行该任务。<br><a id="more"></a></p>
+<h3 id="系统配置调度"><a href="#系统配置调度" class="headerlink" title="系统配置调度"></a>系统配置调度</h3><p>配置文件目录：/etc/crontab<br><img src="./2017-06-20-crontab使用教程/crontab格式说明.jpg" alt=""></p>
+<p><img src="./2017-06-20-crontab使用教程/crontab格式说明2.jpg" alt=""></p>
+<h4 id="crontab文件的格式说明"><a href="#crontab文件的格式说明" class="headerlink" title="crontab文件的格式说明"></a>crontab文件的格式说明</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">minute:分，值为0--59</div><div class="line">hour:时，值为1--23</div><div class="line">day：天，值为1--31</div><div class="line">month：月，值为1--12</div><div class="line">weekday：星期，值为0--6 【0代表星期日，1代表星期一，一次类推】</div><div class="line">username: 要执行程序的用户，一半设置为root</div><div class="line">command：要执行的程序路径【绝对路径】</div></pre></td></tr></table></figure>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><pre><code>1.每天6：00执行
+0 6 * * * root/root/root.sh
+2.每周六凌晨4:00执行
+0 4 * * 6 root /root/root.sh
+3.每周六凌晨4:05执行
+5 4 * * 6 root /root/root.sh
+4.每周六凌晨4:15执行
+15 4 * * 6 root /root/root.sh
+5.每周六凌晨4:25执行
+25 4 * * 6  root /root/root.sh
+6.每周一到周五的11:41开始，每10分钟执行一次
+1-59/10 12-23 * * 1-5 root /root/root.sh
+7.每天的10:31开始，没隔2小时执行一次
+31 10-23/2 * * * root /root/root.sh
+</code></pre><h3 id="crond服务"><a href="#crond服务" class="headerlink" title="crond服务"></a>crond服务</h3><h4 id="安装crontab"><a href="#安装crontab" class="headerlink" title="安装crontab"></a>安装crontab</h4><p>apt-get install crontab    </p>
+<p>yum install crontab </p>
+<h4 id="服务操作说明"><a href="#服务操作说明" class="headerlink" title="服务操作说明"></a>服务操作说明</h4><p>/sbin/service crond start    //启动服务</p>
+<p>/sbin/service crond stop  //关闭服务</p>
+<p>/sbin/service crond restart //重启服务</p>
+<p>/sbin/service crond reload //重新载入配置</p>
+<p>查看crontab服务是否已设置为开机启动，执行命令:   ntsysv<br>加入开机自动启动：    chkconfig –level 35 crond on</p>
+<h3 id="crontab命令详解"><a href="#crontab命令详解" class="headerlink" title="crontab命令详解"></a>crontab命令详解</h3><h4 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h4><p>crontab [-u user] file<br>crontab [-u user] [ -e | -l | -r ]</p>
+<h4 id="命令功能"><a href="#命令功能" class="headerlink" title="命令功能"></a>命令功能</h4><p>通过crontab 命令，我们可以在固定的间隔时间执行指定的系统指令或 shell script脚本。时间间隔的单位可以是分钟、小时、日、月、周及以上的任意组合。这个命令非常设合周期性的日志分析或数据备份等工作。</p>
+<h4 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h4><pre><code>-u user：用来设定某个用户的crontab服务，例如，“-u ixdba”表示设定ixdba用户的crontab服务
+file：file是命令文件的名字,表示将file做为crontab的任务列表文件并载入crontab。如果在命令行中没有指定这个文件，crontab命令将接受标准输入（键盘）上键入的命令，并将它们载入crontab。    
+-e：编辑某个用户的crontab文件内容。如果不指定用户，则表示编辑当前用户的crontab文件。
+-l：显示某个用户的crontab文件内容，如果不指定用户，则表示显示当前用户的crontab文件内容。
+-r：从/var/spool/cron目录中删除某个用户的crontab文件，如果不指定用户，则默认删除当前用户的crontab文件。
+-i：在删除用户的crontab文件时给确认提示。
+</code></pre><h3 id="python-crontab"><a href="#python-crontab" class="headerlink" title="python-crontab"></a>python-crontab</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>pip install python-crontab or easy_install python-crontab</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">from crontab import CronTab</div><div class="line"></div><div class="line">tab = CronTab(user=&apos;www&apos;,fake_tab=&apos;True&apos;)</div><div class="line">cmd = &apos;/var/www/pjr-env/bin/python /var/www/PRJ/job.py&apos;</div><div class="line"># You can even set a comment for this command</div><div class="line">cron_job = tab.new(cmd, comment=&apos;This is the main command&apos;)</div><div class="line">cron_job.minute().on(0)</div><div class="line">cron_job.hour().on(12)</div><div class="line">#writes content to crontab</div><div class="line">tab.write()</div><div class="line">print tab.render()</div></pre></td></tr></table></figure>
+<p>打印结果：<br><code>0 12 * * * /var/www/pjr-env/bin/python /var/www/PRJ/job.py</code></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html" target="_blank" rel="external">http://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;crond是linux下用来周期性的执行某种任务或等待处理某些事件的一个守护进程，与windows下的计划任务类似，当安装完成操作系统后，默认会安装此服务工具，并且会自动启动crond进程，crond进程每分钟会定期检查是否有要执行的任务，如果有要执行的任务，则自动执行该任务。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>pycharm使用教程</title>
+    <link href="http://pyscan.me/2017/06/20/2017-06-20-pycharm%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
+    <id>http://pyscan.me/2017/06/20/2017-06-20-pycharm使用教程/</id>
+    <published>2017-06-20T08:01:30.000Z</published>
+    <updated>2017-06-20T08:17:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>pycharm<br><a id="more"></a></p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a href="https://www.jetbrains.com/pycharm/download/" target="_blank" rel="external">https://www.jetbrains.com/pycharm/download/</a></p>
+<h3 id="安装、激活"><a href="#安装、激活" class="headerlink" title="安装、激活"></a>安装、激活</h3><p>激活方法：<a href="http://idea.lanyus.com" target="_blank" rel="external">http://idea.lanyus.com</a></p>
+<p>c语言重构源码：<a href="https://coding.net/u/privatelo/p/lightjbl" target="_blank" rel="external">https://coding.net/u/privatelo/p/lightjbl</a></p>
+<p>c语言重构运行版本：<a href="https://coding.net/u/privatelo/p/lightjbl-release" target="_blank" rel="external">https://coding.net/u/privatelo/p/lightjbl-release</a></p>
+<p>本地激活服务器创建方法：<a href="http://blog.lanyus.com/archives/174.html" target="_blank" rel="external">http://blog.lanyus.com/archives/174.html</a></p>
+<h3 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h3><h4 id="远程服务器的同步配置"><a href="#远程服务器的同步配置" class="headerlink" title="远程服务器的同步配置"></a>远程服务器的同步配置</h4><p>首先我们需要配置PyCharm通服务器的代码同步，打开Tools | Deployment | Configuration<br>点击左边的“+”添加一个部署配置，输入名字，类型选SFTP<br><img src="http://yidaospace.qiniudn.com/pcr001.png" alt=""></p>
+<p>确定之后，再配置远程服务器的ip、端口、用户名和密码。root path是文件上传的根目录，注意这个目录必须用户名有权限创建文件。<br><img src="http://yidaospace.qiniudn.com/pcr002.png" alt=""></p>
+<p>然后配置映射，local path是你的工程目录，就是需要将本地这个目录同步到服务器上面，我填的是项目根目录。Deploy path on server 这里填写相对于root path的目录，下面那个web path不用管<br><img src="http://yidaospace.qiniudn.com/pcr003.png" alt=""></p>
+<p>如果你还有一些文件或文件夹不想同步，那么在配置对话框的第三个tab页“Excluded path”里面添加即可，可同时指定本地和远程。</p>
+<p>还有一个设置，打开Tools | Deployment | Options，将”Create Empty directories”打上勾，要是指定的文件夹不存在，会自动创建。</p>
+<h4 id="上传和下载文件"><a href="#上传和下载文件" class="headerlink" title="上传和下载文件"></a>上传和下载文件</h4><p>有几种方法可以实现本地和远程文件的同步，手动和当文件保存后自动触发。这里我选择了手动，因为自动触发比如影响性能，PyCharm会卡，感觉不爽。</p>
+<p>手动上传方式很简单，选择需要同步的文件或文件夹，然后选择 Tools | Deployment | Upload to sftp(这个是刚刚配置的部署名称)</p>
+<p>下载文件也是一样，选择 Tools | Deployment | Download from sftp</p>
+<h4 id="比较远程和本地文件"><a href="#比较远程和本地文件" class="headerlink" title="比较远程和本地文件"></a>比较远程和本地文件</h4><p>有时候你并不确定远程和本地版本的完全一致，需要去比较看看。PyCharm提供了对比视图来为你解决这个问题。</p>
+<p>选择Tools | Deployment | Browse Remote Host，打开远程文件视图，在右侧窗口就能看到远程主机中的文件</p>
+<p>选择一个你想要对比的文件夹，点击右键-&gt;Sync with Local，打开同步对比窗口，使用左右箭头来同步内容。</p>
+<p>上面是服务器与本地对比，那么本地文件通服务器对比，就先在PyCharm里面选择文件或文件夹，然后右键-&gt;Deployment-&gt;Sync with deployed to即可<br>PyCharm远程调试</p>
+<p>在PyCharm中进行远程调试有两种选择：</p>
+<ol>
+<li>使用远程的解释器</li>
+<li>使用Python调试服务器这里简单起见我只演示第一种，使用远程解释器，也就是使用服务器上面安装的python解释器。</li>
+</ol>
+<h4 id="配置远程Python解释器"><a href="#配置远程Python解释器" class="headerlink" title="配置远程Python解释器"></a>配置远程Python解释器</h4><p>选择File | Settings，选择Project | Project Interpreter，然后在右边，点击那个小齿轮设置，如下<br><img src="http://yidaospace.qiniudn.com/pcr006.png" alt=""></p>
+<p>然后点击”Add Remote”，填写主机的ssh配置<br><img src="http://yidaospace.qiniudn.com/pcr007.png" alt=""></p>
+<p>如果之前配置过SFTP的话就直接选“Deployment configuration”，然后选择刚刚的模板名称就可以了，由于我上面配置过就直接选模板，这里请仔细看我的Python解释器是虚拟环境virtualenv，这个要在服务器上面先创建好虚拟环境。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;pycharm&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>supervisor使用教程</title>
+    <link href="http://pyscan.me/2017/06/20/2017-06-20-supervisor%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
+    <id>http://pyscan.me/2017/06/20/2017-06-20-supervisor使用教程/</id>
+    <published>2017-06-20T07:32:51.000Z</published>
+    <updated>2017-06-20T13:46:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>项目地址：<a href="https://github.com/Supervisor/supervisor" target="_blank" rel="external">https://github.com/Supervisor/supervisor</a></p>
+<p>官网：<a href="http://supervisord.org" target="_blank" rel="external">http://supervisord.org</a></p>
+<p>Supervisor is a client/server system that allows its users to control a number of processes on UNIX-like operating systems.<br><a id="more"></a></p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>依赖：python2.7.13、pip</p>
+<p>安装命令：pip install supervisor／apt-get install supervisor</p>
+<h4 id="创建配置"><a href="#创建配置" class="headerlink" title="创建配置"></a>创建配置</h4><p>配置文件：/etc/supervisor/supervisord.conf</p>
+<p>可以通过运行echo_supervisord_conf程序生成supervisor的初始化配置文件，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir /etc/supervisor</div><div class="line">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf</div><div class="line">vim /etc/supervisor/supervisord.conf</div></pre></td></tr></table></figure>
+<p>配置文件内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">[unix_http_server]</div><div class="line">file=/tmp/supervisor.sock   ;UNIX socket 文件，supervisorctl 会使用</div><div class="line">;chmod=0700                 ;socket文件的mode，默认是0700</div><div class="line">;chown=nobody:nogroup       ;socket文件的owner，格式：uid:gid</div><div class="line"></div><div class="line">;[inet_http_server]         ;HTTP服务器，提供web管理界面</div><div class="line">;port=127.0.0.1:9001        ;Web管理后台运行的IP和端口，如果开放到公网，需要注意安全性</div><div class="line">;username=user              ;登录管理后台的用户名</div><div class="line">;password=123               ;登录管理后台的密码</div><div class="line"></div><div class="line">[supervisord]</div><div class="line">logfile=/tmp/supervisord.log ;日志文件，默认是 $CWD/supervisord.log</div><div class="line">logfile_maxbytes=50MB        ;日志文件大小，超出会rotate，默认 50MB，如果设成0，表示不限制大小</div><div class="line">logfile_backups=10           ;日志文件保留备份数量默认10，设为0表示不备份</div><div class="line">loglevel=info                ;日志级别，默认info，其它: debug,warn,trace</div><div class="line">pidfile=/tmp/supervisord.pid ;pid 文件</div><div class="line">nodaemon=false               ;是否在前台启动，默认是false，即以 daemon 的方式启动</div><div class="line">minfds=1024                  ;可以打开的文件描述符的最小值，默认 1024</div><div class="line">minprocs=200                 ;可以打开的进程数的最小值，默认 200</div><div class="line"></div><div class="line">[supervisorctl]</div><div class="line">serverurl=unix:///tmp/supervisor.sock ;通过UNIX socket连接supervisord，路径与unix_http_server部分的file一致</div><div class="line">;serverurl=http://127.0.0.1:9001 ; 通过HTTP的方式连接supervisord</div><div class="line"></div><div class="line">; [program:xx]是被管理的进程配置参数，xx是进程的名称</div><div class="line">[program:xx]</div><div class="line">command=/opt/apache-tomcat-8.0.35/bin/catalina.sh run  ; 程序启动命令</div><div class="line">autostart=true       ; 在supervisord启动的时候也自动启动</div><div class="line">startsecs=10         ; 启动10秒后没有异常退出，就表示进程正常启动了，默认为1秒</div><div class="line">autorestart=true     ; 程序退出后自动重启,可选值：[unexpected,true,false]，默认为unexpected，表示进程意外杀死后才重启</div><div class="line">startretries=3       ; 启动失败自动重试次数，默认是3</div><div class="line">user=tomcat          ; 用哪个用户启动进程，默认是root</div><div class="line">priority=999         ; 进程启动优先级，默认999，值小的优先启动</div><div class="line">redirect_stderr=true ; 把stderr重定向到stdout，默认false</div><div class="line">stdout_logfile_maxbytes=20MB  ; stdout 日志文件大小，默认50MB</div><div class="line">stdout_logfile_backups = 20   ; stdout 日志文件备份数，默认是10</div><div class="line">; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）</div><div class="line">stdout_logfile=/opt/apache-tomcat-8.0.35/logs/catalina.out</div><div class="line">stopasgroup=false     ;默认为false,进程被杀死时，是否向这个进程组发送stop信号，包括子进程</div><div class="line">killasgroup=false     ;默认为false，向进程组发送kill信号，包括子进程</div><div class="line"></div><div class="line">;包含其它配置文件</div><div class="line">[include]</div><div class="line">files = relative/directory/*.ini    ;可以指定一个或多个以.ini结束的配置文件</div></pre></td></tr></table></figure>
+<h4 id="设置配置"><a href="#设置配置" class="headerlink" title="设置配置"></a>设置配置</h4><p>创建/etc/supervisor/config.d目录，用于存放进程管理的配置文件 </p>
+<p>修改/etc/supervisor/supervisord.conf中的include参数，将/etc/supervisor/conf.d目录添加到include中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[include]</div><div class="line">files = /etc/supervisor/config.d/*.ini</div></pre></td></tr></table></figure>
+<h4 id="配置案例"><a href="#配置案例" class="headerlink" title="配置案例"></a>配置案例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[program:tomcat]</div><div class="line">command=/opt/apache-tomcat-8.0.35/bin/catalina.sh run</div><div class="line">stdout_logfile=/opt/apache-tomcat-8.0.35/logs/catalina.out</div><div class="line">autostart=true</div><div class="line">autorestart=true</div><div class="line">startsecs=5</div><div class="line">priority=1</div><div class="line">stopasgroup=true</div><div class="line">killasgroup=true</div></pre></td></tr></table></figure>
+<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p><code>supervisord -c /etc/supervisor/supervisord.conf</code></p>
+<h4 id="控制"><a href="#控制" class="headerlink" title="控制"></a>控制</h4><p>supervisord启动成功后，可以通过supervisorctl客户端控制进程，启动、停止、重启。运行supervisorctl命令，不加参数，会进入supervisor客户端的交互终端，并会列出当前所管理的所有进程。</p>
+<h4 id="web控制设置"><a href="#web控制设置" class="headerlink" title="web控制设置"></a>web控制设置</h4><p>出于安全考虑，默认配置是没有开启web管理界面，需要修改supervisord.conf配置文件打开http访权限，将下面的配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[inet_http_server]         ; inet (TCP) server disabled by default</div><div class="line">port=0.0.0.0:9001          ; (ip_address:port specifier, *:port for all iface)</div><div class="line">username=user              ; (default is no username (open server))</div><div class="line">password=123               ; (default is no password (open server))</div></pre></td></tr></table></figure>
+<h4 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h4><p>开机启动脚本项目地址：<a href="https://github.com/Supervisor/initscripts" target="_blank" rel="external">https://github.com/Supervisor/initscripts</a></p>
+<p>将上述脚本内容保存到/etc/rc.d/init.d/supervisor文件中，修改文件权限为755，并设置开机启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod 755 /etc/rc.d/init.d/supervisor</div><div class="line">chkconfig supervisor on</div></pre></td></tr></table></figure>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>supervisor-easy</p>
+<p>通过rpc调用获取配置中的每一个supervisor程序的状态并进行管理，可以分组，分机器进行批量/单个的管理</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;项目地址：&lt;a href=&quot;https://github.com/Supervisor/supervisor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/Supervisor/supervisor&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官网：&lt;a href=&quot;http://supervisord.org&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://supervisord.org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Supervisor is a client/server system that allows its users to control a number of processes on UNIX-like operating systems.&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>iterm2使用教程</title>
+    <link href="http://pyscan.me/2017/06/18/2017-06-18-iterm2%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
+    <id>http://pyscan.me/2017/06/18/2017-06-18-iterm2使用教程/</id>
+    <published>2017-06-18T02:21:06.000Z</published>
+    <updated>2017-06-20T08:41:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="iterm2下载地址"><a href="#iterm2下载地址" class="headerlink" title="iterm2下载地址"></a>iterm2下载地址</h3><p><a href="https://www.iterm2.com/downloads.html" target="_blank" rel="external">https://www.iterm2.com/downloads.html</a><br><a id="more"></a></p>
+<h3 id="oh-my-zsh"><a href="#oh-my-zsh" class="headerlink" title="oh_my_zsh"></a>oh_my_zsh</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>终端下输入以下命令<br><code>brew install zsh</code><br>等待安装完成后，配置zsh，终端输入以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/shells</div><div class="line">/bin/zsh</div></pre></td></tr></table></figure>
+<p>安装oh_my_zsh：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;</div></pre></td></tr></table></figure>
+<h3 id="iterm2常用快捷键"><a href="#iterm2常用快捷键" class="headerlink" title="iterm2常用快捷键"></a>iterm2常用快捷键</h3><ul>
+<li>新建窗口: Command + N</li>
+<li>关闭窗口: Shift + Command + W</li>
+<li>前一个窗口: Command + `</li>
+<li>新建标签页:Command + T</li>
+<li>关闭标签页: Command + W</li>
+<li>进入标签页1，2，3…: Command + 标签页编号</li>
+<li>垂直分割: Command + D</li>
+<li>水平分割: <code>Shift + Command + D</code></li>
+<li>清屏（重置当前终端）: Command + r</li>
+<li>打开配置：Command + ,</li>
+<li>善用Command 键（可以拖拽选中的字符串、点击 url、点击文件、点击文件夹)</li>
+</ul>
+<h3 id="iterm2-zmodem传输文件"><a href="#iterm2-zmodem传输文件" class="headerlink" title="iterm2 zmodem传输文件"></a>iterm2 zmodem传输文件</h3><h4 id="什么是zmodem"><a href="#什么是zmodem" class="headerlink" title="什么是zmodem"></a>什么是zmodem</h4><p>Zmodem是针对modem的一种支持错误校验的文件传输协议。Zmodem是Ymodem的改进版，后者又是Xmodem的改进版。</p>
+<h4 id="zmodem安装"><a href="#zmodem安装" class="headerlink" title="zmodem安装"></a>zmodem安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">brew install lrzsz</div><div class="line">将下面两个脚本创建到/usr/local/bin目录,脚本下载地址：</div><div class="line">https://github.com/mmastrac/iterm2-zmodem</div></pre></td></tr></table></figure>
+<h4 id="设置iterm2"><a href="#设置iterm2" class="headerlink" title="设置iterm2"></a>设置iterm2</h4><p>修改iTerm2的default trigger（iTerm偏好设置-&gt; Profiles -&gt; Default -&gt; Advanced -&gt; Triggers的Edit按钮</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Regular expression: rz waiting to receive.\*\*B0100</div><div class="line">  Action: Run Silent Coprocess</div><div class="line">  Parameters: /usr/local/bin/iterm2-send-zmodem.sh</div><div class="line">  Instant: checked</div><div class="line"></div><div class="line">  Regular expression: \*\*B00000000000000</div><div class="line">  Action: Run Silent Coprocess</div><div class="line">  Parameters: /usr/local/bin/iterm2-recv-zmodem.sh</div><div class="line">  Instant: checked</div></pre></td></tr></table></figure>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>发送文件到远端服务器：rz</p>
+<p>接收远端服务器的文件：sz filename1 filename2 … filenameN</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://docstore.mik.ua/orelly/linux/run/apph_01.htm" target="_blank" rel="external">https://docstore.mik.ua/orelly/linux/run/apph_01.htm</a></p>
+<p><a href="https://github.com/mmastrac/iterm2-zmodem" target="_blank" rel="external">https://github.com/mmastrac/iterm2-zmodem</a></p>
+<h3 id="iterm2配色方案"><a href="#iterm2配色方案" class="headerlink" title="iterm2配色方案"></a>iterm2配色方案</h3><h4 id="配色下载地址"><a href="#配色下载地址" class="headerlink" title="配色下载地址"></a>配色下载地址</h4><p><a href="http://iterm2colorschemes.com" target="_blank" rel="external">http://iterm2colorschemes.com</a></p>
+<p><a href="https://github.com/mbadolato/iTerm2-Color-Schemes" target="_blank" rel="external">https://github.com/mbadolato/iTerm2-Color-Schemes</a></p>
+<p><a href="https://draculatheme.com/iterm/" target="_blank" rel="external">https://draculatheme.com/iterm/</a></p>
+<h4 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h4><p>iTerm2-&gt;Preferences-&gt;Profiles-&gt;Color选择Color Presets-&gt;import到下载好的主题目录下schemes目录下选择你要的主题导入，导入之后别忘记设置成你要的主题。此时你就能看到变化了(如果还没变化的话请重启下iTerms)。</p>
+<h4 id="字体下载"><a href="#字体下载" class="headerlink" title="字体下载"></a>字体下载</h4><p>下载Source Code Pro字体：<br><a href="https://github.com/adobe-fonts/source-code-pro/releases" target="_blank" rel="external">https://github.com/adobe-fonts/source-code-pro/releases</a></p>
+<p>安装：点击LaunchPad，打开Pad界面，搜索字体册，找到下载字体的位置，点击添加字体</p>
+<h3 id="iterm2常用设置"><a href="#iterm2常用设置" class="headerlink" title="iterm2常用设置"></a>iterm2常用设置</h3><p>⌘+Q关闭iTerm 2 时每次弹窗提示问题:</p>
+<p>iTerm 2 中，进入Preference-General-Closing栏目，将Confirm “Quit iTerm2(⌘Q)” command选项勾选去掉就行</p>
+<p>待续…</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;iterm2下载地址&quot;&gt;&lt;a href=&quot;#iterm2下载地址&quot; class=&quot;headerlink&quot; title=&quot;iterm2下载地址&quot;&gt;&lt;/a&gt;iterm2下载地址&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://www.iterm2.com/downloads.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.iterm2.com/downloads.html&lt;/a&gt;&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>vultr-ss-部署</title>
+    <link href="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-%E9%83%A8%E7%BD%B2/"/>
+    <id>http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/</id>
+    <published>2017-04-27T07:45:20.000Z</published>
+    <updated>2017-07-10T07:01:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>vultr提供的vps上部署ss</p>
+<p>优惠链接：<a href="http://www.vultr.com/?ref=7152024" target="_blank" rel="external">http://www.vultr.com/?ref=7152024</a><br><a id="more"></a></p>
+<h3 id="注册支付"><a href="#注册支付" class="headerlink" title="注册支付"></a>注册支付</h3><p>官网地址：<a href="https://www.vultr.com" target="_blank" rel="external">https://www.vultr.com</a><br>注册完账号，登录账号进入服务页面，要求绑定信用卡或者使用paypal支付,根据优惠链接注册可以获取充多少送多少。</p>
+<h3 id="速度测试"><a href="#速度测试" class="headerlink" title="速度测试"></a>速度测试</h3><ol>
+<li>当我们充值完成后，不要急着部署vps，我们可以先测试下各线路速度情况，根据最优速度来选择我们的机房线路</li>
+<li>官网提供了下载文件和ping测速2种方式，地址：<a href="https://www.vultr.com/faq/#downloadspeedtests" target="_blank" rel="external">https://www.vultr.com/faq/#downloadspeedtests</a></li>
+<li>根据你的测试结果得到你要部署的机房路线</li>
+</ol>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><ol>
+<li>支付完毕后，回到Vulrt的界面，点击右侧的＋号，部署(deploy)一个新的VPS(虚拟服务器)。</li>
+<li>名字自己取，IP选择你速度测试结果国家，操作系统选择CentOS 7，套餐选$2.5/月的。点生成</li>
+<li>之后跳转到管理页面，当显示绿色的running时，该VPS就部署好了</li>
+<li>点击该VPS，进入管理页面，可以看到VPS的IP，在VPS管理页面点那个眼睛，可以看到你的ROOT账户的密码。</li>
+</ol>
+<h3 id="服务器端操作"><a href="#服务器端操作" class="headerlink" title="服务器端操作"></a>服务器端操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">ssh root@IP_address</div><div class="line">#利用SSH登陆 ROOT账户，然后输入yes，输入密码，密码在此台vps管理页面的Password:</div><div class="line">#后面两个正方形，点击＝复制密码</div><div class="line">#当光标变成[ROOT@vultr ~]就说明当前你用ROOT账户登录VPS成功，</div><div class="line">#通过@vultr 前的字母来判定当前是哪个账户</div><div class="line"></div><div class="line">useradd A</div><div class="line">#建立非ROOT账户，A</div><div class="line"></div><div class="line">passwd A</div><div class="line">#为A设置密码，输入两次,此时ROOT账户和非ROOT账户置成功了，</div><div class="line">#在ROOT账户下可利用su A转到非ROOT账户</div><div class="line"></div><div class="line">echo -e &quot;\nA ALL=(ALL) ALL\n&quot; &gt;&gt; /etc/sudoers; tail -3 /etc/sudoers</div><div class="line">#赋予A sudo 权限</div><div class="line">#在A账户下利用 sudo su 可以转到ROOT账户</div><div class="line">#利用control+D来推出账户</div><div class="line"></div><div class="line">systemctl disable firewalld</div><div class="line">#移除firewall</div><div class="line"></div><div class="line">yum -y install iptables-services</div><div class="line">#安装防火墙</div><div class="line"></div><div class="line">systemctl enable iptables</div><div class="line">#加入系统</div><div class="line"></div><div class="line">yum -y install vim</div><div class="line">#安装编辑器vim</div><div class="line"></div><div class="line">rm -rf /etc/localtime; ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</div><div class="line">#把vps时间设定成北京时间</div><div class="line">#用命令 date 查看</div></pre></td></tr></table></figure>
+<h3 id="ssh-config"><a href="#ssh-config" class="headerlink" title="ssh config"></a>ssh config</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">vim /etc/ssh/sshd_config</div><div class="line">#编辑 config 文件，按i编辑</div><div class="line"></div><div class="line">利用滚轮下翻，确保各条目所示的状态和下面对应(去掉注释符号#及注释内容)</div><div class="line"></div><div class="line">将 #Port 22改为                    Port 11011    #改默认端口为XXX，XXX为数字，第18行</div><div class="line">PermitRootLogin                    no           #禁止 ROOT 通过SSH登陆，第50行</div><div class="line">RSAAuthentication                  yes          #允许 RSA 认证，第55行</div><div class="line">PubkeyAuthentication               yes          #允许公钥认证，第56行</div><div class="line">PermitEmptyPasswords               no           #禁止空密码登陆，第79行</div><div class="line">PasswordAuthentication             no           #禁止密码登陆，第80行</div><div class="line">ChallengeResponseAuthentication    no           #禁止使用任何的密码登陆，第84行</div><div class="line"></div><div class="line">按 esc 退出编辑，输入:wq  </div><div class="line">#保存并退出 sshd_config</div><div class="line"></div><div class="line">chkconfig iptables on </div><div class="line">#将 iptables 加入到系统服务，随系统启动而启动</div><div class="line"></div><div class="line">service iptables start </div><div class="line">#直接启动 iptables 服务</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">iptables -I OUTPUT -p tcp --sport XXXX -j ACCEPT</div><div class="line">#开放刚才改掉的端口，以免以后无法登陆A账户和ROOT账户，XXX表示之前设置的端口</div><div class="line"></div><div class="line">service iptables save  </div><div class="line">#保存更改</div><div class="line"></div><div class="line">service sshd restart</div><div class="line">##重启 SSH</div><div class="line"></div><div class="line">#iptables命令示例</div><div class="line">#iptables -D INPUT 5    #删除INPUT 中第五条规则</div><div class="line">#iptables -I INPUT 6    #新建规则插入到INPUT中 为第6条</div></pre></td></tr></table></figure>
+<h3 id="fail2ban"><a href="#fail2ban" class="headerlink" title="fail2ban"></a>fail2ban</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">sudo su </div><div class="line">#输密码，转回ROOT，密码在第3步中已设置</div><div class="line"></div><div class="line">yum -y install epel-release; yum -y install fail2ban</div><div class="line">#安装fail2ban</div><div class="line"></div><div class="line">cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local</div><div class="line">#复制配置文件</div><div class="line"></div><div class="line">vim /etc/fail2ban/jail.local</div><div class="line">#按i编辑配置文件</div><div class="line"></div><div class="line">[DEFAULT]  #找到第41行，之后对照修改成下面的样子</div><div class="line"></div><div class="line"># &quot;ignoreip&quot; can be an IP address, a CIDR mask or a DNS host. Fail2ban will not</div><div class="line"># ban a host which matches an address in this list. Several addresses can be</div><div class="line"># defined using space separator.</div><div class="line">ignoreip = 127.0.0.1</div><div class="line"></div><div class="line"># &quot;bantime&quot; is the number of seconds that a host is banned.</div><div class="line">bantime  = 3600</div><div class="line"></div><div class="line"># A host is banned if it has generated &quot;maxretry&quot; during the last &quot;findtime&quot;</div><div class="line"># seconds.</div><div class="line">findtime  = 600</div><div class="line"></div><div class="line"># &quot;maxretry&quot; is the number of failures before a host get banned.</div><div class="line">maxretry = 3</div><div class="line"></div><div class="line">backend = polling  </div><div class="line">#backend这个要设置为polling，默认是auto</div><div class="line">#找到223行，回车，黏贴下面的内容，其中XXX第7步中修改后的端口</div><div class="line"></div><div class="line">[ssh-iptables]</div><div class="line">enabled  = true</div><div class="line">filter   = sshd</div><div class="line">action   = iptables[name=SSH, port=xxx, protocol=tcp]</div><div class="line">           sendmail-whois[name=SSH, dest=root, sender=fail2ban@example.com]</div><div class="line">logpath  = /var/log/secure</div><div class="line">maxretry = 10</div><div class="line"></div><div class="line">按 esc 退出编辑，:wq  #保存并退出</div><div class="line"></div><div class="line">chkconfig --level 23 fail2ban on; service fail2ban start</div><div class="line">#启动 fail2ban</div><div class="line"></div><div class="line">iptables -L -nv --line-number</div><div class="line">#查看是否启动，正常启动则如下所示</div><div class="line">#num   pkts bytes target     prot opt in     out     source               destination         </div><div class="line">#1     1922  189K f2b-SSH    tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:第七步中的端口</div></pre></td></tr></table></figure>
+<h3 id="安装Shadowsocks"><a href="#安装Shadowsocks" class="headerlink" title="安装Shadowsocks"></a>安装Shadowsocks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">#开放SS中的端口，XXXX为刚才所设的&quot;server_port&quot;:XXX端口</div><div class="line"></div><div class="line">service iptables save</div><div class="line">#保存iptables的更改</div></pre></td></tr></table></figure>
+<h3 id="安装FS"><a href="#安装FS" class="headerlink" title="安装FS"></a>安装FS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">rm -f install_fs.sh; wget https://raw.githubusercontent.com/ugukkylbklaom/Vultr-SS-Firewall/master/install_fs.sh; chmod +x install_fs.sh; ./install_fs.sh 2&gt;&amp;1 | tee install.log</div><div class="line">#一键安装，需要按y确认</div><div class="line">#查看日志，如果有success字样则表示成功安装。按ctrl+c退出</div><div class="line"></div><div class="line">chmod +x /etc/rc.local</div><div class="line">#设置开机启动</div><div class="line"></div><div class="line">vim /etc/rc.local</div><div class="line">#按i编辑，另起一行，加入一条 sh /fs/start.sh</div><div class="line">#然后按ESC推出，输入 :wq  保存 退出</div><div class="line"></div><div class="line">crontab -e</div><div class="line">#编辑crontab</div><div class="line">#按i编辑</div><div class="line"></div><div class="line">0 3 * * *  sh /fs/restart.sh</div><div class="line">#每天晚上3点自动重启</div><div class="line">#然后按ESC推出，输入 :wq  保存 退出</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">iptables -I OUTPUT -p tcp --sport XXXX -j ACCEPT</div><div class="line">#开放第7步改掉的端口，以免以后无法登陆A账户和ROOT账户，XXX表示之前设置的端口</div><div class="line"></div><div class="line">iptables -I INPUT -p tcp --dport XXXX -j ACCEPT</div><div class="line">#开放SS中的端口，XXXX为第10步所设的&quot;server_port&quot;:XXX端口</div><div class="line"></div><div class="line">service iptables save  </div><div class="line">#保存更改</div><div class="line"></div><div class="line">service sshd restart</div><div class="line">##重启 SSH</div><div class="line"></div><div class="line">iptables -L -nv --line-number</div><div class="line">#查看iptables</div></pre></td></tr></table></figure>
+<h3 id="TCP-Fast-Open"><a href="#TCP-Fast-Open" class="headerlink" title="TCP Fast Open"></a>TCP Fast Open</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">如果有连接进来，使用如下命令查看：</div><div class="line"># grep &apos;^TcpExt:&apos; /proc/net/netstat | cut -d &apos; &apos; -f 91-96 | column -t</div></pre></td></tr></table></figure>
+<h3 id="安装bbr"><a href="#安装bbr" class="headerlink" title="安装bbr"></a>安装bbr</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">建议使用BBR透明并且使用方便，BBR作为现在TCP比较好的拥塞控制协议，通过对于带宽和网络延迟的交替估计更加准确控制发送窗口的大小。</div><div class="line">Centos7开启方法：</div><div class="line">1.更新系统yum update -y</div><div class="line">2.安装内核 rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</div><div class="line">rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</div><div class="line">yum --enablerepo=elrepo-kernel install kernel-ml</div><div class="line">3.查看安装内核并设置awk -F\&apos; &apos;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&apos; /etc/grub2.cfg</div><div class="line">返回结果应该如下：0 : CentOS Linux (4.9.10-1.el7.elrepo.x86_64) 7 (Core)</div><div class="line">1 : CentOS Linux (3.10.0-514.2.2.el7.x86_64) 7 (Core)</div><div class="line">2 : CentOS Linux (4.9.0-1.el7.elrepo.x86_64) 7 (Core)</div><div class="line">3 : CentOS Linux (3.10.0-327.36.3.el7.x86_64) 7 (Core)</div><div class="line">4 : CentOS Linux (3.10.0-327.36.2.el7.x86_64) 7 (Core)</div><div class="line">5 : CentOS Linux (3.10.0-327.28.3.el7.x86_64) 7 (Core)</div><div class="line">6 : CentOS Linux (3.10.0-327.28.2.el7.x86_64) 7 (Core)</div><div class="line">启动设置 （0号位需要启动的内核，默认安装内核均是0）grub2-set-default 0</div><div class="line">4. 重启 reboot</div><div class="line">5.开启BBR查看内核uname -a</div><div class="line">编辑/etc/sysctl.confecho &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf</div><div class="line">echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf</div><div class="line">保存执行 sysctl -p </div><div class="line">查看是否开启lsmod | grep bbr</div></pre></td></tr></table></figure>
+<h3 id="阻止百度收录真实位置"><a href="#阻止百度收录真实位置" class="headerlink" title="阻止百度收录真实位置"></a>阻止百度收录真实位置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">vim /etc/hosts</div><div class="line">0.0.0.0 api.map.baidu.com</div><div class="line">0.0.0.0 ps.map.baidu.com</div><div class="line">0.0.0.0 sv.map.baidu.com</div><div class="line">0.0.0.0 offnavi.map.baidu.com</div><div class="line">0.0.0.0 newvector.map.baidu.com</div><div class="line">0.0.0.0 ulog.imap.baidu.com</div><div class="line">0.0.0.0 newloc.map.n.shifen.com</div><div class="line">:: api.map.baidu.com</div><div class="line">:: ps.map.baidu.com</div><div class="line">:: sv.map.baidu.com</div><div class="line">:: offnavi.map.baidu.com</div><div class="line">:: newvector.map.baidu.com</div><div class="line">:: ulog.imap.baidu.com</div><div class="line">:: newloc.map.n.shifen.com</div></pre></td></tr></table></figure>
+<h3 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">允许 SSR端口 以888 xxx 为例 你有几个端口，就添加几个</div><div class="line"></div><div class="line">iptables -A INPUT -p tcp -s 0/0 --dport 888 -j ACCEPT</div><div class="line">iptables -A OUTPUT -p tcp --sport 888 -m state --state ESTABLISHED -j ACCEPT</div><div class="line"></div><div class="line">iptables -A INPUT -p tcp -s 0/0 --dport xxx -j ACCEPT</div><div class="line">iptables -A OUTPUT -p tcp --sport xxx -m state --state ESTABLISHED -j ACCEPT</div></pre></td></tr></table></figure>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ifconfig eth0</div><div class="line">#查阅vps的ip</div><div class="line"></div><div class="line">ssserver -c /etc/shadowsocks.json  -d restart; tail  -f -n 20 /var/log/shadowsocks.log</div><div class="line">#重启SS+查看最后20行</div><div class="line"></div><div class="line">ls -la | sed &quot;s:^:`pwd`/:&quot;</div><div class="line"># 列出文件夹内所有文件的绝对路径</div><div class="line"></div><div class="line">pip show shadowsocks</div><div class="line">#查看当前版本</div><div class="line"></div><div class="line">sh /fs/restart.sh; tail -f -n 20 /fs/server.log</div><div class="line">#重启＋查看日志最后20行</div><div class="line"></div><div class="line">iptables -D INPUT X #删除INPUT </div><div class="line">iptables -I INPUT X  #新建规则插入到第六6条</div><div class="line">iptables -A INPUT -p all -j REJECT</div><div class="line"></div><div class="line">sudo ssserver -c /etc/shadowsocks.json  -d stop #停止SS</div></pre></td></tr></table></figure>
+<h3 id="python"><a href="#python" class="headerlink" title="python"></a>python</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">安装依赖包：</div><div class="line">apt-get install build-essential checkinstall</div><div class="line">apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev </div><div class="line">python下载：</div><div class="line">https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz</div><div class="line">https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz</div><div class="line">编译安装：</div><div class="line">./configure --prefix=/usr/local/python/2.7.xx</div><div class="line"> make altinstall</div></pre></td></tr></table></figure>
+<h3 id="shadowsocks"><a href="#shadowsocks" class="headerlink" title="shadowsocks"></a>shadowsocks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">安装脚本：</div><div class="line">https://github.com/ToyoDAdoubi/doubi/blob/master/ssr.sh</div><div class="line">自启动服务：</div><div class="line">chmod 755 /etc/init.d/ssr ; update-rc.d ssr defaults ; service ssr start</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;vultr提供的vps上部署ss&lt;/p&gt;
+&lt;p&gt;优惠链接：&lt;a href=&quot;http://www.vultr.com/?ref=7152024&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.vultr.com/?ref=7152024&lt;/a&gt;&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>github安全工具收集</title>
+    <link href="http://pyscan.me/2017/04/27/2017-04-27-github%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7%E6%94%B6%E9%9B%86/"/>
+    <id>http://pyscan.me/2017/04/27/2017-04-27-github安全工具收集/</id>
+    <published>2017-04-27T07:13:52.000Z</published>
+    <updated>2017-05-03T08:13:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>github 安全工具收集<br><a id="more"></a></p>
+<h4 id="子域名枚举"><a href="#子域名枚举" class="headerlink" title="子域名枚举"></a>子域名枚举</h4><ul>
+<li><a href="https://github.com/lijiejie/subDomainsBrute" target="_blank" rel="external">https://github.com/lijiejie/subDomainsBrute</a> (经典的子域名爆破枚举脚本)</li>
+<li><a href="https://github.com/ring04h/wydomain" target="_blank" rel="external">https://github.com/ring04h/wydomain</a> (子域名字典穷举)</li>
+<li><a href="https://github.com/le4f/dnsmaper" target="_blank" rel="external">https://github.com/le4f/dnsmaper</a> (子域名枚举与地图标记)</li>
+<li><a href="https://github.com/0xbug/orangescan" target="_blank" rel="external">https://github.com/0xbug/orangescan</a> (在线子域名信息收集工具)</li>
+<li><a href="https://github.com/TheRook/subbrute" target="_blank" rel="external">https://github.com/TheRook/subbrute</a> （根据DNS记录查询子域名)</li>
+<li><a href="https://github.com/We5ter/GSDF" target="_blank" rel="external">https://github.com/We5ter/GSDF</a> (基于谷歌SSL透明证书的子域名查询脚本)</li>
+<li><a href="https://github.com/mandatoryprogrammer/cloudflare_enum" target="_blank" rel="external">https://github.com/mandatoryprogrammer/cloudflare_enum</a> （使用CloudFlare进行子域名枚举的脚本）</li>
+<li><a href="https://github.com/18F/domain-scan" target="_blank" rel="external">https://github.com/18F/domain-scan</a> (A domain scanner）</li>
+<li><a href="https://github.com/guelfoweb/knock" target="_blank" rel="external">https://github.com/guelfoweb/knock</a> (Knock Subdomain Scan)</li>
+<li><a href="https://github.com/Evi1CLAY/CoolPool/tree/master/Python/DomainSeeker" target="_blank" rel="external">https://github.com/Evi1CLAY/CoolPool/tree/master/Python/DomainSeeker</a> （多方式收集目标子域名信息）</li>
+<li><a href="https://github.com/code-scan/BroDomain" target="_blank" rel="external">https://github.com/code-scan/BroDomain</a> (兄弟域名查询）</li>
+<li><a href="https://github.com/chuhades/dnsbrute" target="_blank" rel="external">https://github.com/chuhades/dnsbrute</a> (基于dns查询的子域名枚举)</li>
+</ul>
+<h4 id="数据库扫描"><a href="#数据库扫描" class="headerlink" title="数据库扫描"></a>数据库扫描</h4><ul>
+<li><a href="https://github.com/0xbug/SQLiScanner" target="_blank" rel="external">https://github.com/0xbug/SQLiScanner</a> (一款基于SQLMAP和Charles的被动SQL注入漏洞扫描工具)</li>
+<li><a href="https://github.com/stamparm/DSSS" target="_blank" rel="external">https://github.com/stamparm/DSSS</a> (99行代码实现的sql注入漏洞扫描器)</li>
+<li><a href="https://github.com/LoRexxar/Feigong" target="_blank" rel="external">https://github.com/LoRexxar/Feigong</a> （针对各种情况自由变化的MySQL注入脚本）</li>
+<li><a href="https://github.com/youngyangyang04/NoSQLAttack" target="_blank" rel="external">https://github.com/youngyangyang04/NoSQLAttack</a> (一款针对mongoDB的攻击工具)</li>
+<li><a href="https://github.com/Neohapsis/bbqsql" target="_blank" rel="external">https://github.com/Neohapsis/bbqsql</a> （SQL盲注利用框架）</li>
+<li><a href="https://github.com/NetSPI/PowerUpSQL" target="_blank" rel="external">https://github.com/NetSPI/PowerUpSQL</a> （攻击SQLSERVER的Powershell脚本框架）</li>
+<li><a href="https://github.com/WhitewidowScanner/whitewidow" target="_blank" rel="external">https://github.com/WhitewidowScanner/whitewidow</a> (又一款数据库扫描器)</li>
+<li><a href="https://github.com/stampery/mongoaudit" target="_blank" rel="external">https://github.com/stampery/mongoaudit</a> (MongoDB审计及渗透工具）</li>
+<li><a href="https://github.com/torque59/Nosql-Exploitation-Framework" target="_blank" rel="external">https://github.com/torque59/Nosql-Exploitation-Framework</a> (NoSQL扫描/爆破工具）</li>
+</ul>
+<h4 id="弱口令或信息泄漏扫描"><a href="#弱口令或信息泄漏扫描" class="headerlink" title="弱口令或信息泄漏扫描"></a>弱口令或信息泄漏扫描</h4><ul>
+<li><a href="https://github.com/lijiejie/htpwdScan" target="_blank" rel="external">https://github.com/lijiejie/htpwdScan</a> (一个简单的HTTP暴力破解、撞库攻击脚本)</li>
+<li><a href="https://github.com/lijiejie/BBScan" target="_blank" rel="external">https://github.com/lijiejie/BBScan</a> (一个迷你的信息泄漏批量扫描脚本)</li>
+<li><a href="https://github.com/lijiejie/GitHack" target="_blank" rel="external">https://github.com/lijiejie/GitHack</a> (.git文件夹泄漏利用工具) </li>
+<li><a href="https://github.com/wilson9x1/fenghuangscanner_v3" target="_blank" rel="external">https://github.com/wilson9x1/fenghuangscanner_v3</a> (端口及弱口令检测)</li>
+<li><a href="https://github.com/ysrc/F-Scrack" target="_blank" rel="external">https://github.com/ysrc/F-Scrack</a> （对各类服务进行弱口令检测的脚本)</li>
+<li><a href="https://github.com/Mebus/cupp" target="_blank" rel="external">https://github.com/Mebus/cupp</a> （根据用户习惯生成弱口令探测字典脚本）</li>
+<li><a href="https://github.com/RicterZ/genpAss" target="_blank" rel="external">https://github.com/RicterZ/genpAss</a> （中国特色的弱口令生成器）</li>
+<li><a href="https://github.com/netxfly/crack_ssh" target="_blank" rel="external">https://github.com/netxfly/crack_ssh</a> （go写的协程版的ssh\redis\mongodb弱口令破解工具）</li>
+<li><a href="https://github.com/n0tr00t/Sreg" target="_blank" rel="external">https://github.com/n0tr00t/Sreg</a> (通过输入email、phone、username的返回用户注册的所有互联网护照信息)</li>
+<li><a href="https://github.com/repoog/GitPrey" target="_blank" rel="external">https://github.com/repoog/GitPrey</a> (GitHub敏感信息扫描工具)</li>
+<li><a href="https://github.com/dxa4481/truffleHog" target="_blank" rel="external">https://github.com/dxa4481/truffleHog</a> (GitHub敏感信息扫描工具,包括检测commit等)</li>
+<li><a href="https://github.com/LandGrey/pydictor" target="_blank" rel="external">https://github.com/LandGrey/pydictor</a> (暴力破解字典建立工具)</li>
+</ul>
+<h4 id="物联网设备扫描"><a href="#物联网设备扫描" class="headerlink" title="物联网设备扫描"></a>物联网设备扫描</h4><ul>
+<li><a href="https://github.com/rapid7/IoTSeeker" target="_blank" rel="external">https://github.com/rapid7/IoTSeeker</a> （物联网设备默认密码扫描检测工具)</li>
+<li><a href="https://github.com/shodan-labs/iotdb" target="_blank" rel="external">https://github.com/shodan-labs/iotdb</a> (使用nmap扫描IoT设备)</li>
+<li><a href="https://github.com/jh00nbr/Routerhunter-2.0" target="_blank" rel="external">https://github.com/jh00nbr/Routerhunter-2.0</a> （路由器设备漏洞扫描利用)</li>
+<li><a href="https://github.com/scu-igroup/telnet-scanner" target="_blank" rel="external">https://github.com/scu-igroup/telnet-scanner</a> (telnet服务密码撞库)</li>
+</ul>
+<h4 id="XSS扫描"><a href="#XSS扫描" class="headerlink" title="XSS扫描"></a>XSS扫描</h4><ul>
+<li><a href="https://github.com/shawarkhanethicalhacker/BruteXSS" target="_blank" rel="external">https://github.com/shawarkhanethicalhacker/BruteXSS</a> （Cross-Site Scripting Bruteforcer）</li>
+<li><a href="https://github.com/1N3/XSSTracer" target="_blank" rel="external">https://github.com/1N3/XSSTracer</a> (A small python script to check for Cross-Site Tracing)</li>
+<li><a href="https://github.com/0x584A/fuzzXssPHP" target="_blank" rel="external">https://github.com/0x584A/fuzzXssPHP</a> (PHP版本的反射型xss扫描)</li>
+<li><a href="https://github.com/chuhades/xss_scan" target="_blank" rel="external">https://github.com/chuhades/xss_scan</a> (批量扫描xss的python脚本）</li>
+<li><a href="https://github.com/BlackHole1/autoFindXssAndCsrf" target="_blank" rel="external">https://github.com/BlackHole1/autoFindXssAndCsrf</a> (自动化检测页面是否存在XSS和CSRF漏洞的浏览器插件）</li>
+<li><a href="https://github.com/UltimateHackers/XSSight" target="_blank" rel="external">https://github.com/UltimateHackers/XSSight</a> (自动化XSS扫描）</li>
+</ul>
+<h4 id="企业网络自检"><a href="#企业网络自检" class="headerlink" title="企业网络自检"></a>企业网络自检</h4><ul>
+<li><a href="https://github.com/sowish/LNScan" target="_blank" rel="external">https://github.com/sowish/LNScan</a> （详细的内部网络信息扫描器）</li>
+<li><a href="https://github.com/SkyLined/LocalNetworkScanner" target="_blank" rel="external">https://github.com/SkyLined/LocalNetworkScanner</a> (javascript实现的本地网络扫描器)</li>
+<li><a href="https://github.com/ysrc/xunfeng" target="_blank" rel="external">https://github.com/ysrc/xunfeng</a> (网络资产识别引擎，漏洞检测引擎）</li>
+<li><a href="https://github.com/laramies/theHarvester" target="_blank" rel="external">https://github.com/laramies/theHarvester</a> （企业被搜索引擎收录敏感资产信息监控脚本：员工邮箱、子域名、Hosts）</li>
+<li><a href="https://github.com/x0day/Multisearch-v2" target="_blank" rel="external">https://github.com/x0day/Multisearch-v2</a>  (bing、google、360、zoomeye等搜索引擎聚合搜索，可用于发现企业被搜索引擎收录的敏感资产信息）</li>
+</ul>
+<h4 id="webshell检测以及病毒分析工具"><a href="#webshell检测以及病毒分析工具" class="headerlink" title="webshell检测以及病毒分析工具"></a>webshell检测以及病毒分析工具</h4><ul>
+<li><a href="https://github.com/We5ter/Scanners-Box/tree/master/webshell/" target="_blank" rel="external">https://github.com/We5ter/Scanners-Box/tree/master/webshell/</a> （简单的php后门检测工具以及webshell样本库）</li>
+<li><a href="https://github.com/ym2011/ScanBackdoor" target="_blank" rel="external">https://github.com/ym2011/ScanBackdoor</a> （Webshell扫描工具）</li>
+<li><a href="https://github.com/yassineaddi/BackdoorMan" target="_blank" rel="external">https://github.com/yassineaddi/BackdoorMan</a> （A toolkit find malicious, hidden and suspicious PHP scripts and shells in a chosen destination）</li>
+<li><a href="https://github.com/he1m4n6a/findWebshell" target="_blank" rel="external">https://github.com/he1m4n6a/findWebshell</a> （又一款webshell检测工具)</li>
+<li><a href="https://github.com/Tencent/HaboMalHunter" target="_blank" rel="external">https://github.com/Tencent/HaboMalHunter</a> （哈勃分析系统，linux系统病毒分析及安全检测）</li>
+<li><a href="https://github.com/PlagueScanner/PlagueScanner" target="_blank" rel="external">https://github.com/PlagueScanner/PlagueScanner</a> (使用python实现的集成ClamAV、ESET、Bitdefender的反病毒引擎)</li>
+<li><a href="https://github.com/nbs-system/php-malware-finder" target="_blank" rel="external">https://github.com/nbs-system/php-malware-finder</a> (一款高效率PHP-webshell扫描工具)</li>
+<li><a href="https://github.com/emposha/PHP-Shell-Detector/" target="_blank" rel="external">https://github.com/emposha/PHP-Shell-Detector/</a> (测试效率高达99%的webshell检测工具)</li>
+</ul>
+<h4 id="内网渗透"><a href="#内网渗透" class="headerlink" title="内网渗透"></a>内网渗透</h4><ul>
+<li><a href="https://github.com/0xwindows/VulScritp" target="_blank" rel="external">https://github.com/0xwindows/VulScritp</a> （企业内网渗透脚本，包括banner扫描、端口扫描；phpmyadmin、jenkins等通用漏洞利用等）</li>
+<li><a href="https://github.com/lcatro/network_backdoor_scanner" target="_blank" rel="external">https://github.com/lcatro/network_backdoor_scanner</a> （基于网络流量的内网探测框架）</li>
+<li><a href="https://github.com/fdiskyou/hunter" target="_blank" rel="external">https://github.com/fdiskyou/hunter</a> （调用 Windows API 枚举用户登录信息）</li>
+<li><a href="https://github.com/BlackHole1/WebRtcXSS" target="_blank" rel="external">https://github.com/BlackHole1/WebRtcXSS</a> （自动化利用XSS入侵内网）</li>
+</ul>
+<h4 id="端口扫描、指纹识别以及中间件扫描"><a href="#端口扫描、指纹识别以及中间件扫描" class="headerlink" title="端口扫描、指纹识别以及中间件扫描"></a>端口扫描、指纹识别以及中间件扫描</h4><ul>
+<li><a href="https://github.com/ring04h/wyportmap" target="_blank" rel="external">https://github.com/ring04h/wyportmap</a> (目标端口扫描+系统服务指纹识别)</li>
+<li><a href="https://github.com/ring04h/weakfilescan" target="_blank" rel="external">https://github.com/ring04h/weakfilescan</a> (动态多线程敏感信息泄露检测工具)</li>
+<li><a href="https://github.com/EnableSecurity/wafw00f" target="_blank" rel="external">https://github.com/EnableSecurity/wafw00f</a> (WAF产品指纹识别)</li>
+<li><a href="https://github.com/rbsec/sslscan" target="_blank" rel="external">https://github.com/rbsec/sslscan</a> （ssl类型识别)</li>
+<li><a href="https://github.com/urbanadventurer/whatweb" target="_blank" rel="external">https://github.com/urbanadventurer/whatweb</a> (web指纹识别)</li>
+<li><a href="https://github.com/tanjiti/FingerPrint" target="_blank" rel="external">https://github.com/tanjiti/FingerPrint</a> (web应用指纹识别)</li>
+<li><a href="https://github.com/nanshihui/Scan-T" target="_blank" rel="external">https://github.com/nanshihui/Scan-T</a> （网络爬虫式指纹识别)</li>
+<li><a href="https://github.com/OffensivePython/Nscan" target="_blank" rel="external">https://github.com/OffensivePython/Nscan</a> (a fast Network scanner inspired by Masscan and Zmap)</li>
+<li><a href="https://github.com/ywolf/F-NAScan" target="_blank" rel="external">https://github.com/ywolf/F-NAScan</a> (网络资产信息扫描, ICMP存活探测,端口扫描，端口指纹服务识别）</li>
+<li><a href="https://github.com/ywolf/F-MiddlewareScan" target="_blank" rel="external">https://github.com/ywolf/F-MiddlewareScan</a> （中间件扫描）</li>
+<li><a href="https://github.com/maurosoria/dirsearch" target="_blank" rel="external">https://github.com/maurosoria/dirsearch</a> (Web path scanner)</li>
+<li><a href="https://github.com/x0day/bannerscan" target="_blank" rel="external">https://github.com/x0day/bannerscan</a> （C段Banner与路径扫描）</li>
+<li><a href="https://github.com/RASSec/RASscan" target="_blank" rel="external">https://github.com/RASSec/RASscan</a> (端口服务扫描)</li>
+<li><a href="https://github.com/3xp10it/bypass_waf" target="_blank" rel="external">https://github.com/3xp10it/bypass_waf</a> （waf自动暴破）</li>
+<li><a href="https://github.com/3xp10it/xcdn" target="_blank" rel="external">https://github.com/3xp10it/xcdn</a> (尝试找出cdn背后的真实ip)  </li>
+<li><a href="https://github.com/Xyntax/BingC" target="_blank" rel="external">https://github.com/Xyntax/BingC</a> （基于Bing搜索引擎的C段/旁站查询，多线程，支持API）</li>
+<li><a href="https://github.com/Xyntax/DirBrute" target="_blank" rel="external">https://github.com/Xyntax/DirBrute</a> （多线程WEB目录爆破工具）</li>
+<li><a href="https://github.com/zer0h/httpscan" target="_blank" rel="external">https://github.com/zer0h/httpscan</a> （一个爬虫式的网段Web主机发现小工具）</li>
+<li><a href="https://github.com/lietdai/doom" target="_blank" rel="external">https://github.com/lietdai/doom</a> （thorn上实现的分布式任务分发的ip端口漏洞扫描器）</li>
+<li><a href="https://github.com/chichou/grab.js" target="_blank" rel="external">https://github.com/chichou/grab.js</a> (类似 zgrab 的快速 TCP 指纹抓取解析工具，支持更多协议)</li>
+<li><a href="https://github.com/Nitr4x/whichCDN" target="_blank" rel="external">https://github.com/Nitr4x/whichCDN</a> (CDN识别、检测）</li>
+<li><a href="https://github.com/secfree/bcrpscan" target="_blank" rel="external">https://github.com/secfree/bcrpscan</a> (基于爬虫的web路径扫描器)</li>
+<li><a href="https://github.com/mozilla/ssh_scan" target="_blank" rel="external">https://github.com/mozilla/ssh_scan</a> (服务器ssh配置信息扫描）</li>
+<li><a href="https://github.com/ChrisTruncer/gnmap-parser" target="_blank" rel="external">https://github.com/ChrisTruncer/gnmap-parser</a> (gnamp文件解析)</li>
+</ul>
+<h4 id="专用扫描器"><a href="#专用扫描器" class="headerlink" title="专用扫描器"></a>专用扫描器</h4><ul>
+<li><a href="https://github.com/blackye/Jenkins" target="_blank" rel="external">https://github.com/blackye/Jenkins</a> (Jenkins漏洞探测、用户抓取爆破)</li>
+<li><a href="https://github.com/code-scan/dzscan" target="_blank" rel="external">https://github.com/code-scan/dzscan</a> (discuz扫描)</li>
+<li><a href="https://github.com/chuhades/CMS-Exploit-Framework" target="_blank" rel="external">https://github.com/chuhades/CMS-Exploit-Framework</a> (CMS攻击框架)</li>
+<li><a href="https://github.com/lijiejie/IIS_shortname_Scanner" target="_blank" rel="external">https://github.com/lijiejie/IIS_shortname_Scanner</a> (an IIS shortname Scanner)</li>
+<li><a href="https://github.com/riusksk/FlashScanner" target="_blank" rel="external">https://github.com/riusksk/FlashScanner</a> (flashxss扫描)</li>
+<li><a href="https://github.com/coffeehb/SSTIF" target="_blank" rel="external">https://github.com/coffeehb/SSTIF</a> （一个Fuzzing服务器端模板注入漏洞的半自动化工具）</li>
+<li><a href="https://github.com/epinna/tplmap" target="_blank" rel="external">https://github.com/epinna/tplmap</a> (服务器端模板注入漏洞检测与利用工具)</li>
+<li><a href="https://github.com/cr0hn/dockerscan" target="_blank" rel="external">https://github.com/cr0hn/dockerscan</a> (docker扫描工具)</li>
+</ul>
+<h4 id="无线网络渗透、扫描"><a href="#无线网络渗透、扫描" class="headerlink" title="无线网络渗透、扫描"></a>无线网络渗透、扫描</h4><ul>
+<li><a href="https://github.com/savio-code/fern-wifi-cracker/" target="_blank" rel="external">https://github.com/savio-code/fern-wifi-cracker/</a> (无线安全审计工具)</li>
+<li><a href="https://github.com/m4n3dw0lf/PytheM" target="_blank" rel="external">https://github.com/m4n3dw0lf/PytheM</a> （Python网络/渗透测试工具）</li>
+<li><a href="https://github.com/P0cL4bs/WiFi-Pumpkin" target="_blank" rel="external">https://github.com/P0cL4bs/WiFi-Pumpkin</a> （无线安全渗透测试套件）</li>
+</ul>
+<h4 id="代码静态扫描、代码运行栈跟踪"><a href="#代码静态扫描、代码运行栈跟踪" class="headerlink" title="代码静态扫描、代码运行栈跟踪"></a>代码静态扫描、代码运行栈跟踪</h4><ul>
+<li><a href="https://github.com/wufeifei/cobra" target="_blank" rel="external">https://github.com/wufeifei/cobra</a> (白盒代码安全审计系统)</li>
+<li><a href="https://github.com/OneSourceCat/phpvulhunter" target="_blank" rel="external">https://github.com/OneSourceCat/phpvulhunter</a> (静态php代码审计)</li>
+<li><a href="https://github.com/Qihoo360/phptrace" target="_blank" rel="external">https://github.com/Qihoo360/phptrace</a> (跟踪、分析PHP运行情况的工具）</li>
+<li><a href="https://github.com/ajinabraham/NodeJsScan" target="_blank" rel="external">https://github.com/ajinabraham/NodeJsScan</a> (NodeJS应用代码审计）</li>
+</ul>
+<h4 id="模块化扫描、综合扫描器"><a href="#模块化扫描、综合扫描器" class="headerlink" title="模块化扫描、综合扫描器"></a>模块化扫描、综合扫描器</h4><ul>
+<li><a href="https://github.com/az0ne/AZScanner" target="_blank" rel="external">https://github.com/az0ne/AZScanner</a> (自动漏洞扫描器，子域名爆破，端口扫描，目录爆破，常用框架漏洞检测)</li>
+<li><a href="https://github.com/blackye/lalascan" target="_blank" rel="external">https://github.com/blackye/lalascan</a> (自主开发的分布式web漏洞扫描框架，集合owasp top10漏洞扫描和边界资产发现能力)</li>
+<li><a href="https://github.com/blackye/BkScanner" target="_blank" rel="external">https://github.com/blackye/BkScanner</a> (BkScanner 分布式、插件化web漏洞扫描器)</li>
+<li><a href="https://github.com/ysrc/GourdScanV2" target="_blank" rel="external">https://github.com/ysrc/GourdScanV2</a> （被动式漏洞扫描)</li>
+<li><a href="https://github.com/alpha1e0/pentestdb" target="_blank" rel="external">https://github.com/alpha1e0/pentestdb</a> (WEB渗透测试数据库)</li>
+<li><a href="https://github.com/netxfly/passive_scan" target="_blank" rel="external">https://github.com/netxfly/passive_scan</a> (基于http代理的web漏洞扫描器)</li>
+<li><a href="https://github.com/1N3/Sn1per" target="_blank" rel="external">https://github.com/1N3/Sn1per</a> (自动化扫描器，包括中间件扫描以及设备指纹识别)</li>
+<li><a href="https://github.com/RASSec/pentestEr_Fully-automatic-scanner" target="_blank" rel="external">https://github.com/RASSec/pentestEr_Fully-automatic-scanner</a> （定向全自动化渗透测试工具）</li>
+<li><a href="https://github.com/3xp10it/3xp10it" target="_blank" rel="external">https://github.com/3xp10it/3xp10it</a> （自动化渗透测试框架)</li>
+<li><a href="https://github.com/Lcys/lcyscan" target="_blank" rel="external">https://github.com/Lcys/lcyscan</a> (扫描效果未验证）</li>
+<li><a href="https://github.com/Xyntax/POC-T" target="_blank" rel="external">https://github.com/Xyntax/POC-T</a> （渗透测试插件化并发框架）</li>
+<li><a href="https://github.com/v3n0m-Scanner/V3n0M-Scanner" target="_blank" rel="external">https://github.com/v3n0m-Scanner/V3n0M-Scanner</a> （Scanner in Python3.5 for SQLi/XSS/LFI/RFI and other Vulns）</li>
+<li><a href="https://github.com/Skycrab/leakScan" target="_blank" rel="external">https://github.com/Skycrab/leakScan</a> （web端的在线漏洞扫描）</li>
+<li><a href="https://github.com/zhangzhenfeng/AnyScan" target="_blank" rel="external">https://github.com/zhangzhenfeng/AnyScan</a> (开发中…)</li>
+</ul>
+<h4 id="APT"><a href="#APT" class="headerlink" title="APT"></a>APT</h4><ul>
+<li><a href="https://github.com/Neo23x0/Loki" target="_blank" rel="external">https://github.com/Neo23x0/Loki</a> (一款APT入侵痕迹扫描器)</li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;github 安全工具收集&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>my-feed-list</title>
+    <link href="http://pyscan.me/2017/04/26/2017-04-26-my-feed-list/"/>
+    <id>http://pyscan.me/2017/04/26/2017-04-26-my-feed-list/</id>
+    <published>2017-04-26T08:15:37.000Z</published>
+    <updated>2017-04-28T09:11:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>the list of my feed in 2017</p>
+<a id="more"></a>
+<h3 id="hackteam"><a href="#hackteam" class="headerlink" title="hackteam"></a>hackteam</h3><ol>
+<li><a href="http://www.freebuf.com/feed" target="_blank" rel="external">http://www.freebuf.com/feed</a>    freebuf</li>
+<li><a href="http://bobao.360.cn/rss" target="_blank" rel="external">http://bobao.360.cn/rss</a>        安全客</li>
+<li><a href="http://wiki.ioin.in/atom" target="_blank" rel="external">http://wiki.ioin.in/atom</a>    sec-new</li>
+<li><a href="http://paper.seebug.org/rss/" target="_blank" rel="external">http://paper.seebug.org/rss/</a>    seebug</li>
+<li><a href="http://threatpost.com/feed/" target="_blank" rel="external">http://threatpost.com/feed/</a>    threatpost</li>
+<li><a href="http://xuanwulab.github.io/cn/secnews/atom.xml" target="_blank" rel="external">http://xuanwulab.github.io/cn/secnews/atom.xml</a>    玄武lab</li>
+<li><a href="https://www.notsosecure.com/feed/" target="_blank" rel="external">https://www.notsosecure.com/feed/</a>        notsosecure</li>
+<li><a href="http://www.mottoin.com/feed" target="_blank" rel="external">http://www.mottoin.com/feed</a>    mottoin</li>
+<li><a href="https://www.sec-wiki.com/news/rss" target="_blank" rel="external">https://www.sec-wiki.com/news/rss</a>    sec-wiki</li>
+</ol>
+<h3 id="hacktool"><a href="#hacktool" class="headerlink" title="hacktool"></a>hacktool</h3><ol>
+<li><a href="https://www.kali.org/feed/" target="_blank" rel="external">https://www.kali.org/feed/</a>        kali</li>
+<li><a href="http://feeds.feedburner.com/PentestTools" target="_blank" rel="external">http://feeds.feedburner.com/PentestTools</a>    KitPloit</li>
+<li><a href="http://seclists.org/rss/webappsec.rss" target="_blank" rel="external">http://seclists.org/rss/webappsec.rss</a>    nmap webappsec</li>
+<li><a href="http://www.oschina.net/project/rss" target="_blank" rel="external">http://www.oschina.net/project/rss</a>    oschina tools</li>
+</ol>
+<h3 id="hackblog"><a href="#hackblog" class="headerlink" title="hackblog"></a>hackblog</h3><ol>
+<li><a href="https://blog.trailofbits.com/feed/" target="_blank" rel="external">https://blog.trailofbits.com/feed/</a>        Trail of Bits Blog</li>
+<li><a href="https://community.rapid7.com/community/metasploit/blog/feeds/posts" target="_blank" rel="external">https://community.rapid7.com/community/metasploit/blog/feeds/posts</a>    metasploit blog</li>
+<li><a href="http://www.91ri.org/feed" target="_blank" rel="external">http://www.91ri.org/feed</a>    91ri</li>
+<li><a href="http://feeds.feedburner.com/GoogleOnlineSecurityBlog" target="_blank" rel="external">http://feeds.feedburner.com/GoogleOnlineSecurityBlog</a>    google security</li>
+<li><a href="http://evilcos.me/?feed=rss2" target="_blank" rel="external">http://evilcos.me/?feed=rss2</a>    余弦</li>
+<li><a href="https://www.unhonker.com/feed" target="_blank" rel="external">https://www.unhonker.com/feed</a>    90‘s</li>
+<li><a href="http://www.lijiejie.com/feed/" target="_blank" rel="external">http://www.lijiejie.com/feed/</a>    lijiejie</li>
+<li><a href="https://www.waitalone.cn/feed" target="_blank" rel="external">https://www.waitalone.cn/feed</a>    独自等待</li>
+<li><a href="http://www.cnseay.com/feed/" target="_blank" rel="external">http://www.cnseay.com/feed/</a>    seay</li>
+<li><a href="http://blog.csdn.net/cnbird2008/rss/list" target="_blank" rel="external">http://blog.csdn.net/cnbird2008/rss/list</a> cnbird</li>
+<li><a href="http://feeds.feedburner.com/ehacking" target="_blank" rel="external">http://feeds.feedburner.com/ehacking</a>    ehacking</li>
+<li><a href="https://www.fireeye.com/blog/threat-research/_jcr_content.feed" target="_blank" rel="external">https://www.fireeye.com/blog/threat-research/_jcr_content.feed</a>    fireeye’s blog</li>
+<li><a href="http://blog.netlab.360.com/rss" target="_blank" rel="external">http://blog.netlab.360.com/rss</a>    360 netlab</li>
+<li>…</li>
+</ol>
+<h3 id="techblog"><a href="#techblog" class="headerlink" title="techblog"></a>techblog</h3><ol>
+<li><a href="http://www.ccav1.com/feed" target="_blank" rel="external">http://www.ccav1.com/feed</a>    ccav1</li>
+<li><a href="http://sspai.com/feed" target="_blank" rel="external">http://sspai.com/feed</a>    少数派</li>
+<li><a href="http://www.ifanr.com/feed" target="_blank" rel="external">http://www.ifanr.com/feed</a>    爱范儿</li>
+<li><a href="https://www.jayxon.com/feed/" target="_blank" rel="external">https://www.jayxon.com/feed/</a>    jayxon</li>
+<li><a href="http://www.itopdog.cn/feed" target="_blank" rel="external">http://www.itopdog.cn/feed</a>    软件盒子</li>
+<li><a href="http://hrtsea.com/feed/" target="_blank" rel="external">http://hrtsea.com/feed/</a>    心海e站</li>
+<li><a href="http://coolshell.cn/feed/" target="_blank" rel="external">http://coolshell.cn/feed/</a>    酷壳</li>
+<li><a href="http://www.ithome.com/rss/" target="_blank" rel="external">http://www.ithome.com/rss/</a>    it之家</li>
+<li><a href="http://feeds.appinn.com/appinns/" target="_blank" rel="external">http://feeds.appinn.com/appinns/</a>    小众软件</li>
+<li><a href="http://feed.williamlong.info/" target="_blank" rel="external">http://feed.williamlong.info/</a>        月光博客</li>
+<li><a href="http://guofs.com/rssmap.xml" target="_blank" rel="external">http://guofs.com/rssmap.xml</a>    独木成林</li>
+<li><a href="http://www.oschina.net/news/rss" target="_blank" rel="external">http://www.oschina.net/news/rss</a>    oschina NEWS</li>
+<li><a href="https://36kr.com/feed" target="_blank" rel="external">https://36kr.com/feed</a>    36氪</li>
+<li><a href="https://juejin.im/rss" target="_blank" rel="external">https://juejin.im/rss</a>    掘金</li>
+<li>…</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;the list of my feed in 2017&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>mobile-2016-top10</title>
+    <link href="http://pyscan.me/2017/04/24/2017-04-24-mobile-2016-top10/"/>
+    <id>http://pyscan.me/2017/04/24/2017-04-24-mobile-2016-top10/</id>
+    <published>2017-04-24T08:23:32.000Z</published>
+    <updated>2017-04-24T08:37:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Mobile Top 10 2016-Top 10<br><a id="more"></a></p>
+<h3 id="M1-Improper-Platform-Usage"><a href="#M1-Improper-Platform-Usage" class="headerlink" title="M1-Improper Platform Usage"></a>M1-Improper Platform Usage</h3><p>平台使用不当</p>
+<p>This category covers misuse of a platform feature or failure to use platform security controls. It might include Android intents, platform permissions, misuse of TouchID, the Keychain, or some other security control that is part of the mobile operating system. There are several ways that mobile apps can experience this risk.</p>
+<h3 id="M2-Insecure-Data-Storage"><a href="#M2-Insecure-Data-Storage" class="headerlink" title="M2-Insecure Data Storage"></a>M2-Insecure Data Storage</h3><p>不安全的数据存储</p>
+<p>This new category is a combination of M2 + M4 from Mobile Top Ten 2014. This covers insecure data storage and unintended data leakage.</p>
+<h3 id="M3-Insecure-Communication"><a href="#M3-Insecure-Communication" class="headerlink" title="M3-Insecure Communication"></a>M3-Insecure Communication</h3><p>不安全的通讯</p>
+<p>This covers poor handshaking, incorrect SSL versions, weak negotiation, cleartext communication of sensitive assets, etc.</p>
+<h3 id="M4-Insecure-Authentication"><a href="#M4-Insecure-Authentication" class="headerlink" title="M4-Insecure Authentication"></a>M4-Insecure Authentication</h3><p>不安全的身份认证</p>
+<p>This category captures notions of authenticating the end user or bad session management. This can include:</p>
+<p>Failing to identify the user at all when that should be required<br>Failure to maintain the user’s identity when it is required<br>Weaknesses in session management</p>
+<h3 id="M5-Insufficient-Cryptography"><a href="#M5-Insufficient-Cryptography" class="headerlink" title="M5-Insufficient Cryptography"></a>M5-Insufficient Cryptography</h3><p>不足的加密手段</p>
+<p>The code applies cryptography to a sensitive information asset. However, the cryptography is insufficient in some way. Note that anything and everything related to TLS or SSL goes in M3. Also, if the app fails to use cryptography at all when it should, that probably belongs in M2. This category is for issues where cryptography was attempted, but it wasn’t done correctly.</p>
+<h3 id="M6-Insecure-Authorization"><a href="#M6-Insecure-Authorization" class="headerlink" title="M6-Insecure Authorization"></a>M6-Insecure Authorization</h3><p>不安全的授权</p>
+<p>This is a category to capture any failures in authorization (e.g., authorization decisions in the client side, forced browsing, etc.). It is distinct from authentication issues (e.g., device enrolment, user identification, etc.).</p>
+<p>If the app does not authenticate users at all in a situation where it should (e.g., granting anonymous access to some resource or service when authenticated and authorized access is required), then that is an authentication failure not an authorization failure.</p>
+<h3 id="M7-Poor-Code-Quality"><a href="#M7-Poor-Code-Quality" class="headerlink" title="M7-Poor Code Quality"></a>M7-Poor Code Quality</h3><p>客户端代码质量问题</p>
+<p>This was the “Security Decisions Via Untrusted Inputs”, one of our lesser-used categories. This would be the catch-all for code-level implementation problems in the mobile client. That’s distinct from server-side coding mistakes. This would capture things like buffer overflows, format string vulnerabilities, and various other code-level mistakes where the solution is to rewrite some code that’s running on the mobile device.</p>
+<h3 id="M8-Code-Tampering"><a href="#M8-Code-Tampering" class="headerlink" title="M8-Code Tampering"></a>M8-Code Tampering</h3><p>代码篡改</p>
+<p>This category covers binary patching, local resource modification, method hooking, method swizzling, and dynamic memory modification.</p>
+<p>Once the application is delivered to the mobile device, the code and data resources are resident there. An attacker can either directly modify the code, change the contents of memory dynamically, change or replace the system APIs that the application uses, or modify the application’s data and resources. This can provide the attacker a direct method of subverting the intended use of the software for personal or monetary gain.</p>
+<h3 id="M9-Reverse-Engineering"><a href="#M9-Reverse-Engineering" class="headerlink" title="M9-Reverse Engineering"></a>M9-Reverse Engineering</h3><p>逆向工程</p>
+<p>This category includes analysis of the final core binary to determine its source code, libraries, algorithms, and other assets. Software such as IDA Pro, Hopper, otool, and other binary inspection tools give the attacker insight into the inner workings of the application. This may be used to exploit other nascent vulnerabilities in the application, as well as revealing information about back end servers, cryptographic constants and ciphers, and intellectual property.</p>
+<h3 id="M10-Extraneous-Functionality"><a href="#M10-Extraneous-Functionality" class="headerlink" title="M10-Extraneous Functionality"></a>M10-Extraneous Functionality</h3><p>无关的功能</p>
+<p>Often, developers include hidden backdoor functionality or other internal development security controls that are not intended to be released into a production environment. For example, a developer may accidentally include a password as a comment in a hybrid app. Another example includes disabling of 2-factor authentication during testing.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Mobile Top 10 2016-Top 10&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>owasp-2017-top-10</title>
+    <link href="http://pyscan.me/2017/04/11/2017-04-11-owasp-2017-top-10/"/>
+    <id>http://pyscan.me/2017/04/11/2017-04-11-owasp-2017-top-10/</id>
+    <published>2017-04-11T06:12:49.000Z</published>
+    <updated>2017-04-11T06:32:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>提供2017版的owasp top10<br><a id="more"></a></p>
+<h3 id="A1-–-Injection"><a href="#A1-–-Injection" class="headerlink" title="A1 – Injection"></a>A1 – Injection</h3><p><code>A1 – 注入</code></p>
+<p>Injection flaws, such as SQL, OS, XXE, and LDAP injection occur when untrusted data is sent to an interpreter as part of a command or query. The attacker’s hostile data can trick the interpreter into executing unintended commands or accessing data without proper authorization.</p>
+<h3 id="A2-–-Broken-Authentication-and-Session-Management"><a href="#A2-–-Broken-Authentication-and-Session-Management" class="headerlink" title="A2 – Broken Authentication and Session Management"></a>A2 – Broken Authentication and Session Management</h3><p><code>A2 – 破损的认证和会话管理</code></p>
+<p>Application functions related to authentication and session management are often implemented incorrectly, allowing attackers to compromise passwords, keys, or session tokens, or to exploit other implementation flaws to assume other users’ identities (temporarily or permanently).</p>
+<h3 id="A3-–-Cross-Site-Scripting-XSS"><a href="#A3-–-Cross-Site-Scripting-XSS" class="headerlink" title="A3 – Cross-Site Scripting (XSS)"></a>A3 – Cross-Site Scripting (XSS)</h3><p><code>A3 – 跨站脚本 (XSS)</code></p>
+<p>XSS flaws occur whenever an application includes untrusted data in a new web page without proper validation or escaping, or updates an existing web page with user supplied data using a browser API that can create JavaScript. XSS allows attackers to execute scripts in the victim’s browser which can hijack user sessions, deface web sites, or redirect the user to malicious sites.</p>
+<h3 id="A4-–-Broken-Access-Control"><a href="#A4-–-Broken-Access-Control" class="headerlink" title="A4 – Broken Access Control"></a>A4 – Broken Access Control</h3><p><code>A4 – 破损的访问控制</code></p>
+<p>Restrictions on what authenticated users are allowed to do are not properly enforced. Attackers can exploit these flaws to access unauthorized functionality and/or data, such as access other users’ accounts, view sensitive files, modify other users’ data, change access rights, etc.</p>
+<h3 id="A5-–-Security-Misconfiguration"><a href="#A5-–-Security-Misconfiguration" class="headerlink" title="A5 – Security Misconfiguration"></a>A5 – Security Misconfiguration</h3><p><code>A5 – 安全配置错误</code></p>
+<p>Good security requires having a secure configuration defined and deployed for the application, frameworks, application server, web server, database server, platform, etc. Secure settings should be defined, implemented, and maintained, as defaults are often insecure. Additionally, software should be kept up to date.</p>
+<h3 id="A6-–-Sensitive-Data-Exposure"><a href="#A6-–-Sensitive-Data-Exposure" class="headerlink" title="A6 – Sensitive Data Exposure"></a>A6 – Sensitive Data Exposure</h3><p><code>A6 – 敏感信息泄露</code></p>
+<p>Many web applications and APIs do not properly protect sensitive data, such as financial, healthcare, and PII. Attackers may steal or modify such weakly protected data to conduct credit card fraud, identity theft, or other crimes. Sensitive data deserves extra protection such as encryption at rest or in transit, as well as special precautions when exchanged with the browser.</p>
+<h3 id="A7-–-Insufficient-Attack-Protection"><a href="#A7-–-Insufficient-Attack-Protection" class="headerlink" title="A7 – Insufficient Attack Protection"></a>A7 – Insufficient Attack Protection</h3><p><code>A7 – 不足的攻击保护</code></p>
+<p>The majority of applications and APIs lack the basic ability to detect, prevent, and respond to both manual and automated attacks. Attack protection goes far beyond basic input validation and involves automatically detecting, logging, responding, and even blocking exploit attempts. Application owners also need to be able to deploy patches quickly to protect against attacks.</p>
+<h3 id="A8-–-Cross-Site-Request-Forgery-CSRF"><a href="#A8-–-Cross-Site-Request-Forgery-CSRF" class="headerlink" title="A8 – Cross-Site Request Forgery (CSRF)"></a>A8 – Cross-Site Request Forgery (CSRF)</h3><p><code>A8 – 跨站请求伪造 (CSRF)</code></p>
+<p>A CSRF attack forces a logged-on victim’s browser to send a forged HTTP request, including the victim’s session cookie and any other automatically included authentication information, to a vulnerable web application. Such an attack allows the attacker to force a victim’s browser to generate requests the vulnerable application thinks are legitimate requests from the victim.</p>
+<h3 id="A9-–-Using-Components-with-Known-Vulnerabilities"><a href="#A9-–-Using-Components-with-Known-Vulnerabilities" class="headerlink" title="A9 – Using Components with Known Vulnerabilities"></a>A9 – Using Components with Known Vulnerabilities</h3><p><code>A9 – 使用存在漏洞的组件</code></p>
+<p>Components, such as libraries, frameworks, and other software modules, run with the same privileges as the application. If a vulnerable component is exploited, such an attack can facilitate serious data loss or server takeover. Applications and APIs using components with known vulnerabilities may undermine application defenses and enable various attacks and impacts.</p>
+<h3 id="A10-–-Underprotected-APIs"><a href="#A10-–-Underprotected-APIs" class="headerlink" title="A10 – Underprotected APIs"></a>A10 – Underprotected APIs</h3><p><code>A10 – 未受保护的api接口</code></p>
+<p>Modern applications often involve rich client applications and APIs, such as JavaScript in the browser and mobile apps, that connect to an API of some kind (SOAP/XML, REST/JSON, RPC, GWT, etc.). These APIs are often unprotected and contain numerous vulnerabilities.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;提供2017版的owasp top10&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>python实现代理ip池</title>
+    <link href="http://pyscan.me/2017/01/19/2017-01-19-python%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%90%86ip%E6%B1%A0/"/>
+    <id>http://pyscan.me/2017/01/19/2017-01-19-python实现代理ip池/</id>
+    <published>2017-01-19T08:11:02.000Z</published>
+    <updated>2017-02-20T01:45:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。</p>
+<p>代码实现：<a href="https://github.com/virjar/dungproxy" target="_blank" rel="external">https://github.com/virjar/dungproxy</a></p>
+<a id="more"></a>
+<h3 id="前期调研"><a href="#前期调研" class="headerlink" title="前期调研"></a>前期调研</h3><ul>
+<li>代理分类方式</li>
+<li>代理IP来源确认</li>
+<li>代理IP属性确认</li>
+<li>代理IP连接情况判断方法</li>
+<li>代理IP保存方法</li>
+<li>代理IP使用方法</li>
+</ul>
+<h4 id="代理种类-引用wikipedia"><a href="#代理种类-引用wikipedia" class="headerlink" title="代理种类(引用wikipedia)"></a>代理种类(引用<a href="https://zh.wikipedia.org/zh-cn/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="external">wikipedia</a>)</h4><p>根据<strong>协议</strong>区分：</p>
+<blockquote>
+<ul>
+<li><code>FTP代理服务器</code><br>主要用于访问FTP服务器，一般有上传、下载以及缓存功能。端口一般为21、2121等。</li>
+<li><code>HTTP代理服务器</code><br>主要用于访问网页，一般有内容过滤和缓存功能。端口一般为80、8080、3128等。</li>
+<li><code>SSL/TLS代理</code><br>主要用于访问加密网站，一般有SSL或TLS加密功能（最高支持128位加密强度）。端口一般为443。</li>
+<li><code>RTSP代理</code><br>主要用于Realplayer访问Real流媒体服务器，一般有缓存功能。端口一般为554。</li>
+<li><code>Telnet代理</code><br>主要用于telnet远程控制（黑客入侵计算机时常用于隐藏身份）。端口一般为23。</li>
+<li><code>POP3/SMTP代理</code><br>主要用于POP3/SMTP方式收发邮件，一般有缓存功能。端口一般为110/25。</li>
+<li><code>SOCKS代理</code><br>只是单纯传递数据包，不关心具体协议和用法，所以速度快很多。一般有缓存功能。端口一般为1080。（SOCKS代理协议又分为SOCKS4和SOCKS5，SOCKS4协议只支持TCP，而SOCKS5协议支持TCP和UDP，还支持各种身份验证机制、服务器端域名解析等。简单来说：SOCK4能做到的SOCKS5都可以做到，但SOCKS5能做到的SOCK4不一定能做到）</li>
+</ul>
+</blockquote>
+<p>根据<strong>匿名程度</strong>区分：</p>
+<blockquote>
+<ul>
+<li><code>高度匿名代理</code><br>高度匿名代理会将我们的数据包原封不动的转发，在服务端看来就好像真的是一个普通客户端在访问，而记录的IP是代理服务器的IP。</li>
+<li><code>普通匿名代理</code><br>普通匿名代理会在数据包上做一些改动，服务端上有可能发现这是个代理服务器，也有一定几率追查到你的真实IP。代理服务器通常会加入的HTTP头有HTTP_VIA和HTTP_X_FORWARDED_FOR 。</li>
+<li><code>透明代理</code><br>透明代理不但改动了我们的数据包，还会告诉服务器你的真实IP。这种代理除了能用缓存技术帮你提高浏览速度，能用内容过滤提高你的安全性之外，并无其他显著作用。（最常见的例子是：内网中的硬件防火墙）</li>
+<li><code>间谍代理</code><br>间谍代理指组织或个人创建的，用于记录用户传输的数据，然后进行研究、监控等目的代理服务器。</li>
+</ul>
+</blockquote>
+<h4 id="代理IP来源"><a href="#代理IP来源" class="headerlink" title="代理IP来源"></a>代理IP来源</h4><p>从搜索引擎搜索关键字<code>代理ip</code>来看，存在很多提供免费代理ip的分享站点；</p>
+<ul>
+<li><a href="http://www.kuaidaili.com/free/" target="_blank" rel="external">http://www.kuaidaili.com/free/</a></li>
+<li>www.xicidaili.com/</li>
+<li><a href="http://cn-proxy.com/" target="_blank" rel="external">http://cn-proxy.com/</a></li>
+<li>www.goubanjia.com/</li>
+<li>www.66ip.cn/</li>
+<li>www.youdaili.net/</li>
+<li>www.cnproxy.com/proxy1.html</li>
+<li>…</li>
+</ul>
+<p>从工具上着手（不满足需求，暂不考虑）；</p>
+<ul>
+<li>Proxy Hunter</li>
+<li>Proxy NOW系列</li>
+<li>SOCKS Cat</li>
+<li>…</li>
+</ul>
+<p>花钱买也是一种途径。</p>
+<h4 id="代理IP属性规划"><a href="#代理IP属性规划" class="headerlink" title="代理IP属性规划"></a>代理IP属性规划</h4><p>需要的IP属性如下：</p>
+<ul>
+<li>time    #时间</li>
+<li>ip    #ip地址</li>
+<li>port    #端口</li>
+<li>addr    #位置</li>
+<li>type    #代理类型</li>
+<li>speed    #速度</li>
+</ul>
+<h4 id="代理IP可用性"><a href="#代理IP可用性" class="headerlink" title="代理IP可用性"></a>代理IP可用性</h4>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前言：在做测试或扫描的过程中，发现当通过某个ip对站点进行扫描时，站点如果有防爬或防扫描时，会对ip进行封禁操作，封禁时间根据站点设置决定，严重影响扫描结果，因此可以从代理ip这个角度来尝试建立一个代理ip池，通过池中代理ip访问被扫描站点。&lt;/p&gt;
+&lt;p&gt;代码实现：&lt;a href=&quot;https://github.com/virjar/dungproxy&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/virjar/dungproxy&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>我的2016</title>
+    <link href="http://pyscan.me/2017/01/14/2017-01-14-%E6%88%91%E7%9A%842016/"/>
+    <id>http://pyscan.me/2017/01/14/2017-01-14-我的2016/</id>
+    <published>2017-01-14T15:29:13.000Z</published>
+    <updated>2017-02-04T09:17:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>周末甚是无聊，看着2016年即将过去，2017年即将到来，躺在床上，想想自己2016年都完成了什么。<br>想着给自己来个总结，希望能够在2017年有所成长。</p>
+<a id="more"></a>
+<h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><ol>
+<li>戒烟，在发现身体健康程度不理想后，反思了是否可以去掉这个坏毛病，看了本叫《看完你就戒烟了》的书，然后就不在抽烟了，旁边的朋友都说你这说戒烟就戒烟，也太牛逼了吧，其实我想了想，一点也不，只是把一个生活的坏习惯改变过来而已。</li>
+<li>健身，开始坐办公室，不出差，没有以前的运动量，以前是个瘦子（黑矮瘦说的就是我）到现在的提供开始趋于172标准体重以上，肚子开始慢慢突起，就像传说中的人到中年发福的感觉，可是我现在还是不到30的小伙子，于是办了健身会员，不过去的次数真的对不起付出的钱，后来买了新手机，发现keep软件，坚持了一个月，因为到了冬天，也没有坚持下来。</li>
+<li>旅游，2016年年初的时候我就计划了我这一年我要出去玩一次，目的地稻城亚丁，而且规划属于说走就走的状态，只要假期允许，但是因为工作变化和自己宅属性爆发，没能说服自己的内心，旅游作罢。</li>
+<li>购物，因为旅游计划没有落成，于是我在2016年买了一些自己想了许多年许诺给自己的东西：<ul>
+<li>一个可办公可旅游的cote&amp;ciel双肩包，</li>
+<li>一部iPhone 7 plus，</li>
+<li>一块卡西欧户外“泥王”手表，</li>
+<li>一双自己满意的NewBalance慢跑鞋，</li>
+<li>一双Nike城市跑鞋，</li>
+<li>几件JackJones的衬衫和休闲裤，</li>
+<li>一副自己喜欢的眼镜。</li>
+</ul>
+</li>
+<li>感情，无。</li>
+</ol>
+<h3 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h3><ol>
+<li>健康永远是人发现自己问题并解决问题最强大的信仰支撑。</li>
+<li>如何在生活中养成多个能够坚持的好习惯成为我2017年要努力做的。</li>
+<li>提升自己的生活品味，改变宅属性，让生活不再无聊。</li>
+<li>是否能够坚持keep一年运动和跑步（天气允许情况下，每天5公里），健康生活。</li>
+<li>学会并制作几道能拿出手的大菜。</li>
+<li>不在一个人去电影院看好看的电影。</li>
+<li>养成记账习惯</li>
+<li>….</li>
+</ol>
+<h2 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h2><h3 id="目标-1"><a href="#目标-1" class="headerlink" title="目标"></a>目标</h3><ol>
+<li>薪资，把薪资放在第一位是我近1、2年工作以来才改变的，从刚出学校毕业到现在参加工作近5年了，不再是当时从学校毕业出来的小伙子，认为工资低没关系，一定要学到本事，后来慢慢从工作、接触的人、社会了解到能吃饱才是重要的。能力和你薪资成正比，你工作才能努力，并因此提高自己能力来改变你应得的薪资，既然没有继承父母的经商头脑，我也没有想过自己能够自己出来创业，也没有别人的理财头脑，把自己攒的钱投入理财，目前也没有大额存储，虽然也不是一人吃饱全家不饿，至少能够应付当前的需求。</li>
+<li>技能，由于工作内容的性质，需要保持技术的新鲜度，时刻关注当前互联网的先进技术，因此对自己的能力和对技能的理解要比以前更高，整理了2016年知识列表如下：<ul>
+<li>python2、3</li>
+<li>mongodb</li>
+<li>redis</li>
+<li>django</li>
+<li>waf/ids/ips</li>
+<li>elk</li>
+<li>…</li>
+</ul>
+</li>
+<li>沟通，最近总是在问自己工作态度的问题，后来想想发现是沟通的存在问题，如何正确的沟通成为2017年及以后需要掌握的。</li>
+<li>书籍，似乎工作技能、沟通都离不开你对专业知识的理解，因此读书必不可少，因此我在2016年也买了几本书，看完一两本，还有的扔角落，希望自己能够拾起并读完。<ul>
+<li>《Python绝技：运用Python成为顶级黑客》</li>
+<li>《互联网企业安全高级指南》</li>
+<li>《代码审计：企业级Web代码安全架构》</li>
+<li>《…》</li>
+</ul>
+</li>
+</ol>
+<h3 id="反思-1"><a href="#反思-1" class="headerlink" title="反思"></a>反思</h3><ol>
+<li>如何养成整理碎片化知识的能力</li>
+<li>情绪正能量化</li>
+<li>保持学习知识态度，养成日常获取知识小习惯</li>
+<li>想法新鲜，实践才是王道</li>
+<li>多学习开发语言，给自己定个小目标并一一完成</li>
+<li>尝试多写点原创技术文章</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>期待一个不一样的2017。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;周末甚是无聊，看着2016年即将过去，2017年即将到来，躺在床上，想想自己2016年都完成了什么。&lt;br&gt;想着给自己来个总结，希望能够在2017年有所成长。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>spechtlite配置使用说明</title>
+    <link href="http://pyscan.me/2017/01/06/2017-01-06-spechtlite%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/"/>
+    <id>http://pyscan.me/2017/01/06/2017-01-06-spechtlite配置使用说明/</id>
+    <published>2017-01-06T09:55:25.000Z</published>
+    <updated>2017-01-18T09:00:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>SpechtLite 是基于 NEKit 开发的一款网络调试 macOS 软件，这里简单说明一下软件的使用的配置。</p>
+<a id="more"></a>
+<h3 id="菜单各项介绍："><a href="#菜单各项介绍：" class="headerlink" title="菜单各项介绍："></a>菜单各项介绍：</h3><ol>
+<li>Stop proxy server 快捷键 ⌘+D ：断开代理链接；</li>
+<li>Open config folder 快捷键 ⌘+C ：打开配置文件的文件夹，具体如何配置见：配置 ；</li>
+<li>Reload config 快捷键 ⌘+R ：重新加载配置；</li>
+<li>Set as system proxy ：设置为系统代理，正常使用必须打开；</li>
+<li>Copy shell export command ：拷贝是终端通过代理的命令；</li>
+<li>Allow Clients From Lan ：局域网内分享代理，具体见 局域网分享代理；</li>
+<li>Speed test ：速度测试（对Shadowsocks仅供对比测试）；</li>
+<li>Autostart at login ：系统登录时打开；</li>
+<li>Use dev channel ：接受测试版本推送；</li>
+<li>Check for updates 快捷键 ⌘+U ：检查更新；</li>
+<li>Show log ：显示日志；</li>
+<li>Help ：打开项目主页；</li>
+<li>About ：关于；</li>
+<li>Exit 快捷键 ⌘+Q ：退出软件。</li>
+</ol>
+<h3 id="配置："><a href="#配置：" class="headerlink" title="配置："></a>配置：</h3><p>打开软件配置文件的文件夹，打开 <code>Proxy.yaml</code> 文件进行编辑；<code>SpechtLite</code> 提供多种代理方法，这里只介绍 <code>Shadowsocks</code> 协议配置；删除不需要的 adapter 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- id: adapter3</div><div class="line">  type: ss</div><div class="line">  host: ss.server</div><div class="line">  port: 3128</div><div class="line">  method: AES-128-CFB</div><div class="line">  password: ss_password</div></pre></td></tr></table></figure>
+<p>id 为自定义的节点名称； type 为代理的类型，ss 即为 Shadowsocks 协议， host port method password 对应 服务器、端口、加密方式、密码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- id: proxy</div><div class="line">  type: SPEED</div></pre></td></tr></table></figure>
+<p>这是 NEKit 独有特性，简单来说就是每一个通过规则分流的网络请求，在设置的 delay （单位毫秒）后发送请求，哪个节点率先响应，那网络请求就走哪个节点，所有的节点应当按照以下格式添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- id: proxy</div><div class="line">  delay: 300</div></pre></td></tr></table></figure>
+<p>delay根据节点质量和个人需求设置，direct 可有可无。<br>再下 reject 不用修改<br>再下为 分流规则， list 是域名列表，正则匹配； iplist 是 IP 段， country 是根据 GEOIP 判断国家走相应的规则， file 为文件路径， adapter 分：直连、代理、拒绝，其中代理可以设置speed节点组 id ，或者单个节点 id。</p>
+<p>相应的玩法还有很多，比如设定某些关键词对应的请求走某个节点，或者对应某个国家对应的请求走某个节点。</p>
+<p>注意规则顺序从上而下判别。</p>
+<p>在对应的规则文件内注意不要有空白行，以防止出现错误，编辑完成后保存，点击 Reload config 如果没有出现错误，☑️Set as system proxy就可以正常使用了。</p>
+<p>创建多个 yaml 文件保存点击 Reload config，即可在菜单栏☑️切换。</p>
+<p>目前没有办法选在某个配置文件下的某个节点。</p>
+<h3 id="局域网分享代理："><a href="#局域网分享代理：" class="headerlink" title="局域网分享代理："></a>局域网分享代理：</h3><p>使用方法：</p>
+<ol>
+<li>在 SpechtLite ☑️ Allow Clients From Lan；</li>
+<li>需要科学上网的同一局域网下设备，设置 HTTP 代理：<ul>
+<li>iPhone 点击所链接网络详情，在下面的 HTTP 代理 选择手动。</li>
+<li>windows 在 Internet 选项 选择 局域网设置，☑️ 代理服务器。</li>
+<li>Andriod 没研究过。。。</li>
+</ul>
+</li>
+<li>地址／服务器 写 SpechtLite 所在的 Mac 的 局域网地址，端口 写 yaml 配置文件第一行 port: 后所跟的参数，默认是 9090。<br>注：配合 Proxifier 使用效果更好。</li>
+</ol>
+<h3 id="iterm2终端使用代理"><a href="#iterm2终端使用代理" class="headerlink" title="iterm2终端使用代理"></a>iterm2终端使用代理</h3><p>在<code>~/.zshrc</code>中加入下面代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># where proxy</div><div class="line">proxy () &#123;</div><div class="line">  export http_proxy=&quot;http://127.0.0.1:9090&quot; # http代理地址</div><div class="line">  export https_proxy=&quot;http://127.0.0.1:9090&quot; # https代理地址</div><div class="line">  echo &quot;HTTP Proxy on&quot;</div><div class="line">&#125;</div><div class="line"># where noproxy</div><div class="line">noproxy () &#123;</div><div class="line">  unset http_proxy</div><div class="line">  unset https_proxy</div><div class="line">  echo &quot;HTTP Proxy off&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;SpechtLite 是基于 NEKit 开发的一款网络调试 macOS 软件，这里简单说明一下软件的使用的配置。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ossec-for-elk部署</title>
+    <link href="http://pyscan.me/2016/12/05/2016-12-05-ossec-for-elk%E9%83%A8%E7%BD%B2/"/>
+    <id>http://pyscan.me/2016/12/05/2016-12-05-ossec-for-elk部署/</id>
+    <published>2016-12-05T08:45:27.000Z</published>
+    <updated>2017-01-15T07:48:04.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上篇已经讲解了如何安装部署ossec，ossec输出方面包含了多种方式，如syslog、mysql、json等三种方式。</p>
+<a id="more"></a>
+<h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><p><img src="http://s4.51cto.com/wyfs02/M00/83/74/wKioL1dztrviL81LAADgQrLeOxI130.jpg" alt=""></p>
+<h3 id="流程："><a href="#流程：" class="headerlink" title="流程："></a>流程：</h3><ol>
+<li>ossec client通过1514端口把日志发送给ossec server（存储在/var/logs/ossec/alerts/alerts.log），logstash-shipper把ossec server的所有日志分割，并将分割后的日志内容发给redis；</li>
+<li>redis作为ossec server和logstash indexer之间的缓冲区，用来提升系统性能与可靠性,当logstash提取数据失败时,数据保存在redis中,不至于丢失；</li>
+<li>logstash indexer提取redis的日志，将日志收集在一起(负责汇总数据)；</li>
+<li>logstash indexer再把数据交给elasticsearch，elasticsearch存储最终的数据，并提供搜索功能；</li>
+<li>最后通过kibana提供日志分析的web界面。</li>
+</ol>
+<h3 id="logstash启动方式"><a href="#logstash启动方式" class="headerlink" title="logstash启动方式"></a>logstash启动方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">initctl start/stop logstash</div><div class="line">systemctl start/stop logstash.service</div><div class="line">/etc/init.d/logstash start</div></pre></td></tr></table></figure>
+<h3 id="安装x-pack："><a href="#安装x-pack：" class="headerlink" title="安装x-pack："></a>安装x-pack：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">bin/elasticsearch-plugin install x-pack</div><div class="line">bin/kibana-plugin install x-pack</div><div class="line">Username: elastic Password: changeme</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;上篇已经讲解了如何安装部署ossec，ossec输出方面包含了多种方式，如syslog、mysql、json等三种方式。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ossec部署安装指南</title>
+    <link href="http://pyscan.me/2016/12/05/2016-12-05-ossec%E9%83%A8%E7%BD%B2%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/"/>
+    <id>http://pyscan.me/2016/12/05/2016-12-05-ossec部署安装指南/</id>
+    <published>2016-12-05T07:25:45.000Z</published>
+    <updated>2017-01-15T07:46:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>ossec官方网站：<a href="http://www.ossec.net/" target="_blank" rel="external">http://www.ossec.net/</a></p>
+<p>ossec帮助文档：<a href="http://ossec-docs.readthedocs.org/en/latest/manual/index.html" target="_blank" rel="external">http://ossec-docs.readthedocs.org/en/latest/manual/index.html</a></p>
+<p>OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的时，Solaris，HP-UX，AIX和Windows</p>
+<p>ossec wazuh版（如果安装server版，强烈推荐安装此版本）：<a href="http://wazuh-documentation.readthedocs.io/en/latest/" target="_blank" rel="external">http://wazuh-documentation.readthedocs.io/en/latest/</a></p>
+<a id="more"></a>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2.安装"></a>2.安装</h2><h3 id="2-1安装环境"><a href="#2-1安装环境" class="headerlink" title="2.1安装环境"></a>2.1安装环境</h3><p>需要安装：<code>sudo yum install  make gcc git</code>、<code>sudo apt-get install gcc make git</code></p>
+<p>如果需要认证：<code>sudo yum install openssl-devel</code>、<code>sudo apt-get install libssl-dev</code></p>
+<h3 id="2-2下载并安装"><a href="#2-2下载并安装" class="headerlink" title="2.2下载并安装"></a>2.2下载并安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd ~</div><div class="line">$ mkdir ossec_tmp &amp;&amp; cd ossec_tmp</div><div class="line">$ git clone -b stable https://github.com/wazuh/wazuh.git ossec-wazuh</div><div class="line">$ cd ossec-wazuh</div><div class="line">$ sudo ./install.sh</div></pre></td></tr></table></figure>
+<p>选择server安装后并根据问题选择安装内容，安装完后，你可以启动ossec启动服务：<br><code>sudo /var/ossec/bin/ossec-control start</code></p>
+<h3 id="2-3添加agent"><a href="#2-3添加agent" class="headerlink" title="2.3添加agent"></a>2.3添加agent</h3><p>在server端执行<code>/var/ossec/bin/manage_agents</code>来选择添加一个新的agent</p>
+<p>在agent端修改配置文件<code>/var/ossec/etc/ossec.conf</code>，设置server-ip的值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;ossec_config&gt;</div><div class="line">	&lt;client&gt;</div><div class="line">		&lt;server-ip&gt;XXX.XXX.XXX.XXX&lt;/server-ip&gt;</div><div class="line">	&lt;/client&gt;</div></pre></td></tr></table></figure>
+<p>在agent端执行<code>/var/ossec/bin/manage_agents</code>来添加key，添加key成功后，重启agent：<code>/var/ossec/bin/ossec-control restart</code></p>
+<p>至此，关于agent的server、agent端部署完成。</p>
+<h2 id="3-坑"><a href="#3-坑" class="headerlink" title="3.坑"></a>3.坑</h2><h3 id="3-1数据库支持"><a href="#3-1数据库支持" class="headerlink" title="3.1数据库支持"></a>3.1数据库支持</h3><p>当我们需要将ossec结果保存到数据库中，我们需要在编译时加入对数据库的支持。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># sudo apt-get install libmysqlclient-dev</div><div class="line"># sudo apt-get install mysql-server</div><div class="line"># sudo apt-get install mysql-client</div></pre></td></tr></table></figure>
+<p>在执行<code>./install.sh</code>之前，我们需要编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># cd ossec-hids-*</div><div class="line"># cd src; make setdb; cd ..</div><div class="line"># ./install.sh</div></pre></td></tr></table></figure>
+<p>激活数据库输出选择：<code># /var/ossec/bin/ossec-control enable database</code></p>
+<p>数据库设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"># mysql -u root -proot</div><div class="line">mysql&gt; create database ossec;</div><div class="line">mysql&gt; grant INSERT,SELECT,UPDATE,CREATE,DELETE,EXECUTE on ossec.* to caoqing@&apos;192.168.27.%&apos;;</div><div class="line">mysql&gt; set password for caoqing@&apos;192.168.27.%&apos;=PASSWORD(&apos;caoqing&apos;);</div><div class="line">mysql&gt; flush privileges;</div><div class="line">mysql&gt; quit</div><div class="line"># mysql -u root -proot ossec &lt; /root/soft/ossec-hids-2.7.1/src/os_dbd/mysql.schema</div><div class="line"># mysql -u root -proot ossec</div><div class="line">mysql&gt; show tables;</div><div class="line">+----------------------------+</div><div class="line">| Tables_in_ossec            |</div><div class="line">+----------------------------+</div><div class="line">| agent                      |</div><div class="line">| alert                      |</div><div class="line">| category                   |</div><div class="line">| data                       |</div><div class="line">| location                   |</div><div class="line">| server                     |</div><div class="line">| signature                  |</div><div class="line">| signature_category_mapping |</div><div class="line">+----------------------------+</div><div class="line">8 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>配置文件配置<code>/var/ossec/etc/ossec.conf</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;ossec_config&gt;</div><div class="line">    &lt;database_output&gt;</div><div class="line">        &lt;hostname&gt;xx.xx.xx.xx&lt;/hostname&gt;</div><div class="line">        &lt;username&gt;xxx&lt;/username&gt;</div><div class="line">        &lt;password&gt;xxx&lt;/password&gt;</div><div class="line">        &lt;database&gt;ossec&lt;/database&gt;</div><div class="line">        &lt;type&gt;mysql&lt;/type&gt;</div><div class="line">    &lt;/database_output&gt;</div><div class="line">&lt;/ossec_config&gt;</div></pre></td></tr></table></figure>
+<p>重启服务并查看服务状态中是否包含dbd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># /var/ossec/bin/ossec-control enable database</div><div class="line"># /var/ossec/bin/ossec-control restart</div><div class="line"># /var/ossec/bin/ossec-control status</div><div class="line">ossec-monitord is running...</div><div class="line">ossec-logcollector is running...</div><div class="line">ossec-remoted is running...</div><div class="line">ossec-syscheckd is running...</div><div class="line">ossec-analysisd is running...</div><div class="line">ossec-maild not running...</div><div class="line">ossec-execd is running...</div><div class="line">ossec-dbd is running...</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;1-简介&quot;&gt;&lt;a href=&quot;#1-简介&quot; class=&quot;headerlink&quot; title=&quot;1.简介&quot;&gt;&lt;/a&gt;1.简介&lt;/h2&gt;&lt;p&gt;ossec官方网站：&lt;a href=&quot;http://www.ossec.net/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.ossec.net/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ossec帮助文档：&lt;a href=&quot;http://ossec-docs.readthedocs.org/en/latest/manual/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://ossec-docs.readthedocs.org/en/latest/manual/index.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;OSSEC是一个开源的基于主机的入侵检测系统，执行日志分析，文件完整性检查，政策监控，rootkit检测，实时报警和积极响应。它可以运行在大多数的操作系统，包括Linux，MacOS的时，Solaris，HP-UX，AIX和Windows&lt;/p&gt;
+&lt;p&gt;ossec wazuh版（如果安装server版，强烈推荐安装此版本）：&lt;a href=&quot;http://wazuh-documentation.readthedocs.io/en/latest/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://wazuh-documentation.readthedocs.io/en/latest/&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>mongo-connector导入数据到elasticsearch</title>
+    <link href="http://pyscan.me/2016/09/10/2016-09-10-mongo-connector%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E5%88%B0elasticsearch/"/>
+    <id>http://pyscan.me/2016/09/10/2016-09-10-mongo-connector导入数据到elasticsearch/</id>
+    <published>2016-09-09T16:42:16.000Z</published>
+    <updated>2016-09-09T16:48:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>当前测试环境下Elasticsearch版本为2.3。不同版本的mongo-connector、elastic-doc-manager/elastic2-doc-manager所支持的Elasticsearch版本不同，安装时注意版本的选择。</p>
+<a id="more"></a>
+<h2 id="安装mongo-connector"><a href="#安装mongo-connector" class="headerlink" title="安装mongo-connector"></a>安装mongo-connector</h2><p>测试机上Python的默认版本为2.6，由于我采用anonacoda作为Python开发环境，Python默认版本2.7。故使用pip2.7而不是pip命令。</p>
+<p><a href="https://github.com/mongodb-labs/mongo-connector" target="_blank" rel="external">mongo-connector下载官方网址</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 安装mongo-connector（当前版本为2.3）</div><div class="line">./CONDA-HOME/bin/pip2.7 install mongo-connector</div><div class="line"># elastic2-doc-manager （当前版本为0.1.0）</div><div class="line">./CONDA-HOME/bin/pip2.7 install elastic2-doc-manager</div></pre></td></tr></table></figure>
+<h2 id="导入mongodb中的数据到Elasticsearch集群"><a href="#导入mongodb中的数据到Elasticsearch集群" class="headerlink" title="导入mongodb中的数据到Elasticsearch集群"></a>导入mongodb中的数据到Elasticsearch集群</h2><p>在安装了monog-connector的机子的命令行中执行下面的命令（该命令为测试时的真实命令）。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongo-connector --auto-commit-interval=0 -m ip_addr1:27018 -t ip_addr2:9200 -d elastic2_doc_manager -n db.collection</div></pre></td></tr></table></figure>
+<p>mongo-connector命令主要参数解析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">-m   mongodb_host:port    —— 数据源地址，mongodb数据库地址。</div><div class="line">-t   target_host:port     —— 数据目的地地址，elasticsearch/solr/mongodb集群地址。建议为集群中的协调节点的地址。</div><div class="line">-d   xxx_doc_manager      —— 数据目的地的document类型。例如：</div><div class="line">                               将mongodb中的数据同步到elasticsearch，使用elastic_doc_manager或elastic2_doc_manager。 </div><div class="line">                               将mongodb中的数据同步到solr，使用solr_doc_manager。</div><div class="line">                               将mongodb中数据同步到其他mongodb，使用mongo_doc_manager。</div><div class="line">-n   db.collection ...    —— 待同步的数据库及其collection。默认同步所有数据库。</div><div class="line">-i   filed_name ...       —— 待同步的字段。默认同步所有字段。</div><div class="line">-o   mongodb_oplog_position.oplog  —— mongo-connector的oplog。默认在mongo-connector命令执行目录下创建oplog.timestamp文件。</div><div class="line">                               建议重新分配存储位置（也可重新分配存储文件名），例如 /opt/mongo-connector.oplog。</div><div class="line">--auto-commit-interval    —— 数据同步间隔。默认在不同系统上有不同的值。设置为0表示mongodb中的任何操作立即同步到数据目的地。</div><div class="line">--continue-on-error       —— 一条数据同步失败，日志记录该失败操作，继续后续同步操作。默认为中止后续同步操作。</div><div class="line"></div><div class="line">其他参数包括设置日志输出行为（时间、间隔、路径等）、设置mongodb登录账户和密码、设置（数据目的地）Http连接的证书等、设置mongo-connector的配置文件。</div></pre></td></tr></table></figure>
+<h2 id="使用mongo-connector同步数据注意事项"><a href="#使用mongo-connector同步数据注意事项" class="headerlink" title="使用mongo-connector同步数据注意事项"></a>使用mongo-connector同步数据注意事项</h2><ol>
+<li><p>mongodb必须开启副本集（Replica Set）。开启副本集才会产生oplog，副本拷贝主分片的oplog并通过oplog与主分片进行同步。<br>mongo-connector也是通过oplog进行数据同步，故必须开启副本集。</p>
+</li>
+<li><p>使用mongo-connector命令同步数据时，-m参数中的mongodb地址应该是主/从分片的地址，<br>从该地址登录可以看见并操作local数据库（oplog存储在local.oplog.rs）；不能使用mongoos地址。</p>
+</li>
+<li><p>使用mongo-connector命令同步数据时 ，mongo-connector的oplog（参照-o参数）不能随便删除，<br>否则会引起重新同步所有数据的问题。该问题可以通过–no-dump选项关闭。</p>
+</li>
+<li><p>生产环境下建议将mongo-connector配置为系统服务，运行mongo-connector时采用配置文件的方式。</p>
+</li>
+</ol>
+<h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2><ol>
+<li><p>数据库A中有多个集合(A1, A2, A3)，且已开启了副本集（Replica Set），但是集合A1可以同步，集合A2不能同步.<br> 原因：oplog中有A1的操作记录，没有A2的操作记录。<br> 结论：开启副本集（Replica Set）并不能保证一定能同步，oplog中必须包含待同步集合的操作记录，才能通过mongo-connector同步到Elasticsearch集群。</p>
+</li>
+<li><p>mongodb3.x版本加强了安全机制，导致了在只拥有某个库的权限时不能同步数据的问题。<br> 原因：拥有某个库的权限，并不能拥有oplog的读取权限，而mongo-connector需要读取oplog的权限。<br> 结论：同步数据至少需要能够读取oplog的权限，确保当前mongodb用户的权限能够操作oplog，或者直接使用mongodb的管理员权限。</p>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当前测试环境下Elasticsearch版本为2.3。不同版本的mongo-connector、elastic-doc-manager/elastic2-doc-manager所支持的Elasticsearch版本不同，安装时注意版本的选择。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>如何使用workflow</title>
+    <link href="http://pyscan.me/2016/09/09/2016-09-09-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8workflow/"/>
+    <id>http://pyscan.me/2016/09/09/2016-09-09-如何使用workflow/</id>
+    <published>2016-09-09T06:01:57.000Z</published>
+    <updated>2016-09-09T06:58:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="如何使用workflow"><a href="#如何使用workflow" class="headerlink" title="如何使用workflow"></a>如何使用workflow</h2><a id="more"></a>
+<h3 id="1-you-should-have-alfred"><a href="#1-you-should-have-alfred" class="headerlink" title="1.you should have alfred!"></a>1.you should have alfred!</h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;如何使用workflow&quot;&gt;&lt;a href=&quot;#如何使用workflow&quot; class=&quot;headerlink&quot; title=&quot;如何使用workflow&quot;&gt;&lt;/a&gt;如何使用workflow&lt;/h2&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>docker-mac-learn</title>
+    <link href="http://pyscan.me/2016/08/13/2016-08-13-docker-mac-learn/"/>
+    <id>http://pyscan.me/2016/08/13/2016-08-13-docker-mac-learn/</id>
+    <published>2016-08-13T05:36:04.000Z</published>
+    <updated>2016-09-09T06:57:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Dockerfile 由一行行命令语句组成，并且支持以 # 开头的注释行。<br>一般的，Dockerfile 分为四部分：基础镜像信息、维护者信息、镜像操作指令和容器启动时执行指令。<br><a id="more"></a></p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">FROM ubuntu</div><div class="line">MAINTAINER docker_user docker_user@email.com</div><div class="line">RUN echo &quot;deb http://archive.ubuntu.com/ubuntu/ raring main universe&quot; &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN apt-get update &amp;&amp; apt-get install -y nginx</div><div class="line">RUN echo &quot;\ndaemon off;&quot; &gt;&gt; /etc/nginx/nginx.conf</div><div class="line">CMD /usr/sbin/nginx</div></pre></td></tr></table></figure>
+<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><p>指令的一般格式为 INSTRUCTION arguments，指令包括 FROM、MAINTAINER、RUN 等。</p>
+<h2 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h2><p>格式为 FROM <image>或FROM <image>:<tag>。</tag></image></image></p>
+<p>第一条指令必须为 FROM 指令。并且，如果在同一个Dockerfile中创建多个镜像时，可以使用多个 FROM 指令（每个镜像一次）。</p>
+<h2 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h2><p>格式为 MAINTAINER <name>，指定维护者信息。</name></p>
+<h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>格式为 RUN <command> 或 RUN [“executable”, “param1”, “param2”]。</p>
+<p>前者将在 shell 终端中运行命令，即 /bin/sh -c；后者则使用 exec 执行。指定使用其它终端可以通过第二种方式实现，例如 RUN [“/bin/bash”, “-c”, “echo hello”]。</p>
+<p>每条 RUN 指令将在当前镜像基础上执行指定命令，并提交为新的镜像。当命令较长时可以使用 \ 来换行。</p>
+<h2 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h2><p>支持三种格式</p>
+<ol>
+<li>CMD [“executable”,”param1”,”param2”] 使用 exec 执行，推荐方式；</li>
+<li>CMD command param1 param2 在 /bin/sh 中执行，提供给需要交互的应用；</li>
+<li>CMD [“param1”,”param2”] 提供给 ENTRYPOINT 的默认参数；</li>
+</ol>
+<p>指定启动容器时执行的命令，每个 Dockerfile 只能有一条 CMD 命令。如果指定了多条命令，只有最后一条会被执行。</p>
+<p>如果用户启动容器时候指定了运行的命令，则会覆盖掉 CMD 指定的命令。</p>
+<h2 id="EXPOSE"><a href="#EXPOSE" class="headerlink" title="EXPOSE"></a>EXPOSE</h2><p>格式为 EXPOSE <port> [<port>…]。</port></port></p>
+<p>告诉 Docker 服务端容器暴露的端口号，供互联系统使用。在启动容器时需要通过 -P，Docker 主机会自动分配一个端口转发到指定的端口。</p>
+<h2 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h2><p>格式为 ENV <key> <value>。 指定一个环境变量，会被后续 RUN 指令使用，并在容器运行时保持。</value></key></p>
+<p>例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ENV PG_MAJOR 9.3</div><div class="line">ENV PG_VERSION 9.3.4</div><div class="line">RUN curl -SL http://example.com/postgres-$PG_VERSION.tar.xz | tar -xJC /usr/src/postgress &amp;&amp; …</div><div class="line">ENV PATH /usr/local/postgres-$PG_MAJOR/bin:$PATH</div></pre></td></tr></table></figure>
+<h2 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h2><p>格式为 ADD <src> <dest>。</dest></src></p>
+<p>该命令将复制指定的 <src> 到容器中的 <dest>。 其中 <src> 可以是Dockerfile所在目录的一个相对路径；也可以是一个 URL；还可以是一个 tar 文件（自动解压为目录）。</src></dest></src></p>
+<h2 id="COPY"><a href="#COPY" class="headerlink" title="COPY"></a>COPY</h2><p>格式为 COPY <src> <dest>。</dest></src></p>
+<p>复制本地主机的 <src>（为 Dockerfile 所在目录的相对路径）到容器中的 <dest>。<br>当使用本地目录为源目录时，推荐使用 COPY。</dest></src></p>
+<h2 id="ENTRYPOINT"><a href="#ENTRYPOINT" class="headerlink" title="ENTRYPOINT"></a>ENTRYPOINT</h2><p>两种格式：</p>
+<ol>
+<li>ENTRYPOINT [“executable”, “param1”, “param2”]</li>
+<li>ENTRYPOINT command param1 param2（shell中执行）</li>
+</ol>
+<p>配置容器启动后执行的命令，并且不可被 docker run 提供的参数覆盖。<br>每个 Dockerfile 中只能有一个 ENTRYPOINT，当指定多个时，只有最后一个起效。</p>
+<h2 id="VOLUME"><a href="#VOLUME" class="headerlink" title="VOLUME"></a>VOLUME</h2><p>格式为 VOLUME [“/data”]。</p>
+<p>创建一个可以从本地主机或其他容器挂载的挂载点，一般用来存放数据库和需要保持的数据等。</p>
+<h2 id="USER"><a href="#USER" class="headerlink" title="USER"></a>USER</h2><p>格式为 USER daemon。<br>指定运行容器时的用户名或 UID，后续的 RUN 也会使用指定用户。<br>当服务不需要管理员权限时，可以通过该命令指定运行用户。并且可以在之前创建所需要的用户，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RUN groupadd -r postgres &amp;&amp; useradd -r -g postgres postgres</div></pre></td></tr></table></figure>
+<p>要临时获取管理员权限可以使用 gosu，而不推荐 sudo。</p>
+<h2 id="WORKDIR"><a href="#WORKDIR" class="headerlink" title="WORKDIR"></a>WORKDIR</h2><p>格式为 WORKDIR /path/to/workdir。<br>为后续的 RUN、CMD、ENTRYPOINT 指令配置工作目录。<br>可以使用多个 WORKDIR 指令，后续命令如果参数是相对路径，则会基于之前命令指定的路径。例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">WORKDIR /a</div><div class="line">WORKDIR b</div><div class="line">WORKDIR c</div><div class="line">RUN pwd</div></pre></td></tr></table></figure>
+<p>则最终路径为 /a/b/c。</p>
+<h2 id="ONBUILD"><a href="#ONBUILD" class="headerlink" title="ONBUILD"></a>ONBUILD</h2><p>格式为 ONBUILD [INSTRUCTION]。</p>
+<p>配置当所创建的镜像作为其它新创建镜像的基础镜像时，所执行的操作指令。</p>
+<p>例如，Dockerfile 使用如下的内容创建了镜像 image-A。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[...]</div><div class="line">ONBUILD ADD . /app/src</div><div class="line">ONBUILD RUN /usr/local/bin/python-build --dir /app/src</div><div class="line">[...]</div></pre></td></tr></table></figure>
+<p>如果基于 image-A 创建新的镜像时，新的Dockerfile中使用 FROM image-A指定基础镜像时，会自动执行 ONBUILD 指令内容，等价于在后面添加了两条指令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">FROM image-A</div><div class="line">Automatically run the following</div><div class="line">ADD . /app/src</div><div class="line">RUN /usr/local/bin/python-build --dir /app/src</div></pre></td></tr></table></figure>
+<p>使用 ONBUILD 指令的镜像，推荐在标签中注明，例如 ruby:1.9-onbuild。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Dockerfile 由一行行命令语句组成，并且支持以 # 开头的注释行。&lt;br&gt;一般的，Dockerfile 分为四部分：基础镜像信息、维护者信息、镜像操作指令和容器启动时执行指令。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>

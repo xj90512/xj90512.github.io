@@ -85,6 +85,8 @@
 
 
 
+  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
+
 
 
 
@@ -205,6 +207,56 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -241,9 +293,9 @@
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/07/19/关于sdk安全调研及对比分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -308,44 +360,15 @@
 
       
         
-          
-            <h3 id="什么是sdk"><a href="#什么是sdk" class="headerlink" title="什么是sdk"></a>什么是sdk</h3><p>SDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。</p>
-<p>Android SDK 指的是Android专属的软件开发工具包。</p>
-<h3 id="sdk有哪些作用"><a href="#sdk有哪些作用" class="headerlink" title="sdk有哪些作用"></a>sdk有哪些作用</h3><p>广告、支付、统计、社交、推送，地图等类别，是广告商、支付公司、社交、推送平台，地图服务商等第三方服务公司为了便于应用开发人员使用其提供的服务而开发的工具包，封装了一些复杂的逻辑实现以及请求，响应解析的API</p>
-<h3 id="从哪些方面对比"><a href="#从哪些方面对比" class="headerlink" title="从哪些方面对比"></a>从哪些方面对比</h3><h3 id="有哪些安全问题"><a href="#有哪些安全问题" class="headerlink" title="有哪些安全问题"></a>有哪些安全问题</h3><p>一些恶意的Sdk本身会存在着安全威胁，除了众所周知的获取用户隐私信息，如收集设备id（IMEI，IMSI等）、获取用户位置信息外，还存在着更严重的安全问题。比如某些sdk具有主动接收服务器指令的功能，它会根据需要收集短信、通话记录和联系人等敏感信息。另外，它还会执行如动态下载代码等危险操作。</p>
-<p>Sdk自身可能还会存在漏洞。如果这些漏洞被利用，攻击者就能够利用sdk本身存在的强大功能发动恶意的攻击行为，例如在用户毫无察觉的情况下打开相机拍照，通过发送短信盗取双因素认证令牌，或将设备变成僵尸网络的一部分。<br>下面介绍下目前在第三方sdk（主要是指广告sdk）中发现的恶意行为和漏洞。</p>
-<h4 id="恶意行为"><a href="#恶意行为" class="headerlink" title="恶意行为"></a>恶意行为</h4><pre><code>收集用于定位和追踪用户的信息，如设备id和位置信息，
-收集用户的邮箱地址以及安装在用户设备上的应用程序列表。
-读取短信、邮件、电话通话记录和联系人列表，在没有任何访问控制措施的情况下通过web服务公开共享这些数据。
-接收远程服务器指令，下载任意代码并执行。
-数据明文传输
-</code></pre><h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><pre><code>通过明文传输数据
-</code></pre><p>　　通过HTTP明文传输用户的隐私信息，使隐私信息很容易被窃取。FireEye 的研究者声称在Google Play的主流应用中有47%的广告sdk存在该漏洞。</p>
-<pre><code>使用HTTP协议传输数据
-</code></pre><p>使用不安全的HTTP协议从控制服务器接收命令或者动态加载代码。攻击者可以通过中间人攻击，劫持HTTP数据包，冒充服务器下发恶意指令、推送恶意代码，将第三方sdk变成一个僵尸网络。</p>
-<pre><code>Webview漏洞
-</code></pre><p>WebView相当于一个浏览器窗口，应用程序可以使用它来显示网页内容。addJavascriptInterface这个API允许运行在WebView中的JavaScript代码来访问应用的native功能。攻击者可以利用此漏洞，使用应用已有的权限，通过恶意的JavaScript代码来对设备进行恶意操作。这个漏洞已经影响到超过90％的Android设备了。</p>
-<pre><code>使用动态加载的方式进行升级
-</code></pre><p>采用运行时动态加载技术在Dalvik虚拟机中动态执行代码作为其升级机制的一部分，却没有对动态加载的代码进行校验。如果该部分代码被黑客恶意篡改，则会给用户造成严重的安全威胁。</p>
-<h3 id="各厂商sdk对比情况"><a href="#各厂商sdk对比情况" class="headerlink" title="各厂商sdk对比情况"></a>各厂商sdk对比情况</h3><h3 id="如何提高安全性"><a href="#如何提高安全性" class="headerlink" title="如何提高安全性"></a>如何提高安全性</h3><pre><code>关键核心功能实现隐藏
-</code></pre><p>java代码实现代码很容易被反编译，转而用Ndk实现，提高反编译难度，进一步可以通过加固so文件加密，从而更难被反编译查看。可以参考<a href="http://www.cnblogs.com/lanrenxinxin/p/4962470.html" target="_blank" rel="external">http://www.cnblogs.com/lanrenxinxin/p/4962470.html</a></p>
-<pre><code>文件加密及Sdk加壳加固 
-</code></pre><p>Sdk中dex文件和so文件加密从而屏蔽外部窥探，提高反编译难度。并且进一步通过jni本地方法来屏蔽核心方法，在so文件内解密dex文件并加载，Sdk暴露的接口全部通过jni来跳转或者通过反射跳转到核心dex内实现。</p>
-<pre><code>网络安全 
-</code></pre><p>如果网络请求不安全，直接被抓包，接口和参数直接被窥探从而被模拟，提高安全的话直接用https，如果条件不允许，那至少得加密传输，对参数加密，加密算法必须得so文件来实现。同时配合服务端做一些防刷，有限性鉴定。</p>
-<pre><code>方法调用栈检查 
-</code></pre><p>如果不对调用栈入口检查，就会出现方法被肆意调用，用户不受控制的调用干扰调用流程，如上述直接去掉sdk调用中出现的界面，所以可以直接在某个方法入口处先检查下此时的调用栈顺序是否符合流程的设计，可以检查下第一个入口，以及后上方的几个入口是否为设定的流程。</p>
-<pre><code>方法入口统一扎口
-</code></pre><p>Java实现方法在sdk，总能通过反射任意调用各个方法，单独使用某个方法来实现某个功能，所以假如我们经常为了共用功能而经常封装成单独方法，这样就为避开sdk设计的流程而单独调用提供了机会，这时会有人会说那我把所有的功能用一个方法实现来达到避免流程干扰，这样显示不切实际，那样的代码又长又臭，没有人敢来维护。即使如此，有个工具通过javassit来实现注入代码从而干扰代码执行流程。那到底有没有好点的办法来统一扎口呢？个人觉得比较好的方式就是通过Ndk来实现封装，毕竟jni接口入口可以独立出来使用，比起java代码反编难度大，调试难，又不好注入代码，更难随意调用ndk内部c++实现的相关方法。<br>用一个jni入口暴露出来给java层调用，内部封装整个流程，很好避开大部分破解流程。</p>
-<pre><code>云方案 
-
-调用鉴权 
-</code></pre><p>主要可以分为静态鉴权和动态鉴权。前者主要是用来检查固定参数，如appKey和appSecret，以及结合限定应用包名（packageName）和应用名(appName)达非到限定sdk被未经授权而扩散使用。<br>上述这种仅仅是用来限制非正常的正式使用扩散，而不能约束用户尝试性窥探从而加大用户的破解难度。如果对sdk的调用使用可以直接通过accessCode方式以及Sdk加密从而进一步打消窥探和破解的念头，让每一次调用都不可重复，从而加大调试的难度和复杂性。</p>
-<pre><code>字符混淆以及字典混淆
-</code></pre><p>字符混淆用来对抗反编译工具，让字符常量不显示或着显示成16进制数组。<br>详细见这边文章：<a href="http://bobao.360.cn/learning/detail/3704.html?spm=a313e.7916648.0.0.11b0b6cqnOKtJ" target="_blank" rel="external">http://bobao.360.cn/learning/detail/3704.html?spm=a313e.7916648.0.0.11b0b6cqnOKtJ</a><br>字典混淆是指通常混淆字典都是abc…可以通过配置特殊字典，让反编译者看得怀疑人生</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.cnblogs.com/goodhacker/p/4708318.html" target="_blank" rel="external">http://www.cnblogs.com/goodhacker/p/4708318.html</a></p>
-
-          
+          <h3 id="什么是sdk"><a href="#什么是sdk" class="headerlink" title="什么是sdk"></a>什么是sdk</h3><p>SDK：（software development kit）软件开发工具包。被软件开发工程师用于为特定的软件包、软件框架、硬件平台、操作系统等建立应用软件的开发工具的集合。</p>
+<p>Android SDK 指的是Android专属的软件开发工具包。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/19/关于sdk安全调研及对比分析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -395,9 +418,9 @@
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/23/osquery-for-security/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -542,9 +565,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/20/2017-06-20-celery使用教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -666,9 +689,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/20/2017-06-20-crontab使用教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -790,9 +813,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/20/2017-06-20-pycharm使用教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -914,9 +937,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/20/2017-06-20-supervisor使用教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1040,9 +1063,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/06/18/2017-06-18-iterm2使用教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1164,9 +1187,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1289,9 +1312,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/04/27/2017-04-27-github安全工具收集/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1413,9 +1436,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
     <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/04/26/2017-04-26-my-feed-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bunny">
+      <meta itemprop="name" content="请叫我向公">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1559,7 +1582,11 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
-            <p class="site-author-name" itemprop="name">bunny</p>
+            <img class="site-author-image" itemprop="image"
+              src="/images/avatar.png"
+              alt="请叫我向公" />
+          
+            <p class="site-author-name" itemprop="name">请叫我向公</p>
             <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
         </div>
 
@@ -1568,7 +1595,7 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
           
             <div class="site-state-item site-state-posts">
             
-              <a href="/archives">
+              <a href="/archives/">
             
                 <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
@@ -1577,14 +1604,59 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
           
 
           
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
           
 
         </nav>
 
         
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xj90512" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Bunny_jie" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/asone520" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>微博</a>
+              </span>
+            
           
         </div>
 
@@ -1615,12 +1687,12 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
+  &copy;  2016 &mdash; 
   <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">bunny</span>
+  <span class="author" itemprop="copyrightHolder">请叫我向公</span>
 
   
 </div>
@@ -1673,7 +1745,12 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
   
 
 
+  
 
+
+
+  
+  
 
 
 
@@ -1700,6 +1777,15 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
 
   
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
 
 
   
