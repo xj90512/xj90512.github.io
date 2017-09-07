@@ -69,9 +69,9 @@
       <category term="learn" scheme="http://pyscan.me/categories/learn/"/>
     
     
-      <category term="sdk" scheme="http://pyscan.me/tags/sdk/"/>
-    
       <category term="security" scheme="http://pyscan.me/tags/security/"/>
+    
+      <category term="sdk" scheme="http://pyscan.me/tags/sdk/"/>
     
       <category term="android" scheme="http://pyscan.me/tags/android/"/>
     
