@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://pyscan.me/"/>
-  <updated>2017-10-09T02:35:26.684Z</updated>
+  <updated>2017-10-13T02:01:39.490Z</updated>
   <id>http://pyscan.me/</id>
   
   <author>
@@ -14,6 +14,25 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>sysctl优化</title>
+    <link href="http://pyscan.me/2017/10/13/sysctl%E4%BC%98%E5%8C%96/"/>
+    <id>http://pyscan.me/2017/10/13/sysctl优化/</id>
+    <published>2017-10-13T01:51:19.000Z</published>
+    <updated>2017-10-13T02:01:39.490Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">查看TIME_WAIT连接数量</div><div class="line">netstat -an | grep TIME_WAIT -wc</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">#优化TCP</div><div class="line">vi /etc/sysctl.conf</div><div class="line">#禁用包过滤功能 </div><div class="line">net.ipv4.ip_forward = 0  </div><div class="line">#启用源路由核查功能 </div><div class="line">net.ipv4.conf.default.rp_filter = 1  </div><div class="line">#禁用所有IP源路由 </div><div class="line">net.ipv4.conf.default.accept_source_route = 0  </div><div class="line">#使用sysrq组合键是了解系统目前运行情况，为安全起见设为0关闭</div><div class="line">kernel.sysrq = 0  </div><div class="line">#控制core文件的文件名是否添加pid作为扩展</div><div class="line">kernel.core_uses_pid = 1  </div><div class="line">#开启SYN Cookies，当出现SYN等待队列溢出时，启用cookies来处理</div><div class="line">net.ipv4.tcp_syncookies = 1  </div><div class="line">#每个消息队列的大小（单位：字节）限制</div><div class="line">kernel.msgmnb = 65536  </div><div class="line">#整个系统最大消息队列数量限制</div><div class="line">kernel.msgmax = 65536  </div><div class="line">#单个共享内存段的大小（单位：字节）限制，计算公式64G*1024*1024*1024(字节)</div><div class="line">kernel.shmmax = 68719476736  </div><div class="line">#所有内存大小（单位：页，1页 = 4Kb），计算公式16G*1024*1024*1024/4KB(页)</div><div class="line">kernel.shmall = 4294967296  </div><div class="line">#timewait的数量，默认是180000</div><div class="line">net.ipv4.tcp_max_tw_buckets = 6000  </div><div class="line">#开启有选择的应答</div><div class="line">net.ipv4.tcp_sack = 1  </div><div class="line">#支持更大的TCP窗口. 如果TCP窗口最大超过65535(64K), 必须设置该数值为1</div><div class="line">net.ipv4.tcp_window_scaling = 1  </div><div class="line">#TCP读buffer</div><div class="line">net.ipv4.tcp_rmem = 4096 131072 1048576</div><div class="line">#TCP写buffer</div><div class="line">net.ipv4.tcp_wmem = 4096 131072 1048576   </div><div class="line">#为TCP socket预留用于发送缓冲的内存默认值（单位：字节）</div><div class="line">net.core.wmem_default = 8388608</div><div class="line">#为TCP socket预留用于发送缓冲的内存最大值（单位：字节）</div><div class="line">net.core.wmem_max = 16777216  </div><div class="line">#为TCP socket预留用于接收缓冲的内存默认值（单位：字节）  </div><div class="line">net.core.rmem_default = 8388608</div><div class="line">#为TCP socket预留用于接收缓冲的内存最大值（单位：字节）</div><div class="line">net.core.rmem_max = 16777216</div><div class="line">#每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数目</div><div class="line">net.core.netdev_max_backlog = 262144  </div><div class="line">#web应用中listen函数的backlog默认会给我们内核参数的net.core.somaxconn限制到128，而nginx定义的NGX_LISTEN_BACKLOG默认为511，所以有必要调整这个值</div><div class="line">net.core.somaxconn = 262144  </div><div class="line">#系统中最多有多少个TCP套接字不被关联到任何一个用户文件句柄上。这个限制仅仅是为了防止简单的DoS攻击，不能过分依靠它或者人为地减小这个值，更应该增加这个值(如果增加了内存之后)</div><div class="line">net.ipv4.tcp_max_orphans = 3276800  </div><div class="line">#记录的那些尚未收到客户端确认信息的连接请求的最大值。对于有128M内存的系统而言，缺省值是1024，小内存的系统则是128</div><div class="line">net.ipv4.tcp_max_syn_backlog = 262144  </div><div class="line">#时间戳可以避免序列号的卷绕。一个1Gbps的链路肯定会遇到以前用过的序列号。时间戳能够让内核接受这种“异常”的数据包。这里需要将其关掉</div><div class="line">net.ipv4.tcp_timestamps = 0  </div><div class="line">#为了打开对端的连接，内核需要发送一个SYN并附带一个回应前面一个SYN的ACK。也就是所谓三次握手中的第二次握手。这个设置决定了内核放弃连接之前发送SYN+ACK包的数量</div><div class="line">net.ipv4.tcp_synack_retries = 1  </div><div class="line">#在内核放弃建立连接之前发送SYN包的数量</div><div class="line">net.ipv4.tcp_syn_retries = 1  </div><div class="line">#开启TCP连接中time_wait sockets的快速回收</div><div class="line">net.ipv4.tcp_tw_recycle = 1  </div><div class="line">#开启TCP连接复用功能，允许将time_wait sockets重新用于新的TCP连接（主要针对time_wait连接）</div><div class="line">net.ipv4.tcp_tw_reuse = 1  </div><div class="line">#1st低于此值,TCP没有内存压力,2nd进入内存压力阶段,3rdTCP拒绝分配socket(单位：内存页)</div><div class="line">net.ipv4.tcp_mem = 94500000 915000000 927000000   </div><div class="line">#如果套接字由本端要求关闭，这个参数决定了它保持在FIN-WAIT-2状态的时间。对端可以出错并永远不关闭连接，甚至意外当机。缺省值是60 秒。2.2 内核的通常值是180秒，你可以按这个设置，但要记住的是，即使你的机器是一个轻载的WEB服务器，也有因为大量的死套接字而内存溢出的风险，FIN- WAIT-2的危险性比FIN-WAIT-1要小，因为它最多只能吃掉1.5K内存，但是它们的生存期长些。</div><div class="line">net.ipv4.tcp_fin_timeout = 15  </div><div class="line">#表示当keepalive起用的时候，TCP发送keepalive消息的频度（单位：秒）</div><div class="line">net.ipv4.tcp_keepalive_time = 30  </div><div class="line">#对外连接端口范围</div><div class="line">net.ipv4.ip_local_port_range = 2048 65000</div><div class="line">#表示文件句柄的最大数量</div><div class="line">fs.file-max = 102400</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;c
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>intellij-idea-for-mac快捷键</title>
@@ -403,9 +422,9 @@ Usage: /usr/local/bin/osqueryctl {clean|config-check|start|stop|status|restart}
       <category term="learn" scheme="http://pyscan.me/categories/learn/"/>
     
     
-      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
-    
       <category term="linux" scheme="http://pyscan.me/tags/linux/"/>
+    
+      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
     
       <category term="celery" scheme="http://pyscan.me/tags/celery/"/>
     
@@ -467,9 +486,9 @@ file：file是命令文件的名字,表示将file做为crontab的任务列表文
       <category term="learn" scheme="http://pyscan.me/categories/learn/"/>
     
     
-      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
-    
       <category term="linux" scheme="http://pyscan.me/tags/linux/"/>
+    
+      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
     
       <category term="crontab" scheme="http://pyscan.me/tags/crontab/"/>
     
@@ -570,9 +589,9 @@ file：file是命令文件的名字,表示将file做为crontab的任务列表文
       <category term="learn" scheme="http://pyscan.me/categories/learn/"/>
     
     
-      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
-    
       <category term="linux" scheme="http://pyscan.me/tags/linux/"/>
+    
+      <category term="tools" scheme="http://pyscan.me/tags/tools/"/>
     
       <category term="supervisor" scheme="http://pyscan.me/tags/supervisor/"/>
     
@@ -1409,29 +1428,6 @@ file：file是命令文件的名字,表示将file做为crontab的任务列表文
       <category term="elasticsearch" scheme="http://pyscan.me/tags/elasticsearch/"/>
     
       <category term="python" scheme="http://pyscan.me/tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何使用workflow</title>
-    <link href="http://pyscan.me/2016/09/09/2016-09-09-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8workflow/"/>
-    <id>http://pyscan.me/2016/09/09/2016-09-09-如何使用workflow/</id>
-    <published>2016-09-09T06:01:57.000Z</published>
-    <updated>2017-09-07T02:05:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="如何使用workflow"><a href="#如何使用workflow" class="headerlink" title="如何使用workflow"></a>如何使用workflow</h2><a id="more"></a>
-<h3 id="1-you-should-have-alfred"><a href="#1-you-should-have-alfred" class="headerlink" title="1.you should have alfred!"></a>1.you should have alfred!</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;如何使用workflow&quot;&gt;&lt;a href=&quot;#如何使用workflow&quot; class=&quot;headerlink&quot; title=&quot;如何使用workflow&quot;&gt;&lt;/a&gt;如何使用workflow&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="workflow" scheme="http://pyscan.me/categories/workflow/"/>
-    
-    
-      <category term="workflow" scheme="http://pyscan.me/tags/workflow/"/>
     
   </entry>
   
