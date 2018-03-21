@@ -5,12 +5,15 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
+
+
+
 
 
 
@@ -38,10 +41,6 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
 
 
 
@@ -50,35 +49,58 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
 
 
 
 
 
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
   <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
-
-
-
-
 
 
 <meta name="description" content="to be a hacker or to be hack...">
@@ -94,29 +116,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '5.1.3',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
+
 
 
 
@@ -124,8 +125,11 @@
 
 
 
-
-
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
   <title>请叫我向公'blog</title>
   
 
@@ -135,6 +139,34 @@
 
 
 
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
 
 </head>
 
@@ -150,7 +182,7 @@
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
+      <div class="header-inner"> <div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
@@ -184,21 +216,13 @@
         
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
         </li>
       
         
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
-          </a>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
         </li>
       
 
@@ -210,9 +234,15 @@
 </nav>
 
 
+  
+
+
 
  </div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
@@ -227,6 +257,191 @@
 
   
   
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pyscan.me/2018/02/08/2018-02-08-API的开发安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="请叫我向公">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="请叫我向公'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/08/2018-02-08-API的开发安全/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-08T10:38:09+08:00">2018-02-08</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="开发安全的-API-所需要核对的清单"><a href="#开发安全的-API-所需要核对的清单" class="headerlink" title="开发安全的 API 所需要核对的清单"></a>开发安全的 API 所需要核对的清单</h1><p>以下是当你在设计, 测试以及发布你的 API 的时候所需要核对的重要安全措施.</p>
+<hr>
+<h2 id="身份认证"><a href="#身份认证" class="headerlink" title="身份认证"></a>身份认证</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 不要使用 <code>Basic Auth</code> 使用标准的认证协议 (如 JWT, OAuth).</li>
+<li style="list-style: none"><input type="checkbox"> 不要再造 <code>Authentication</code>, <code>token generating</code>, <code>password storing</code> 这些轮子, 使用标准的.</li>
+<li style="list-style: none"><input type="checkbox"> 在登录中使用 <code>Max Retry</code> 和自动封禁功能.</li>
+<li style="list-style: none"><input type="checkbox"> 加密所有的敏感数据.</li>
+</ul>
+<h3 id="JWT-JSON-Web-Token"><a href="#JWT-JSON-Web-Token" class="headerlink" title="JWT (JSON Web Token)"></a>JWT (JSON Web Token)</h3><ul>
+<li style="list-style: none"><input type="checkbox"> 使用随机复杂的密钥 (<code>JWT Secret</code>) 以增加暴力破解的难度.</li>
+<li style="list-style: none"><input type="checkbox"> 不要在请求体中直接提取数据, 要对数据进行加密 (<code>HS256</code> 或 <code>RS256</code>).</li>
+<li style="list-style: none"><input type="checkbox"> 使 token 的过期时间尽量的短 (<code>TTL</code>, <code>RTTL</code>).</li>
+<li style="list-style: none"><input type="checkbox"> 不要在 JWT 的请求体中存放敏感数据, 它是<a href="https://jwt.io/#debugger-io" target="_blank" rel="noopener">可破解的</a>.</li>
+</ul>
+<h3 id="OAuth-授权或认证协议"><a href="#OAuth-授权或认证协议" class="headerlink" title="OAuth 授权或认证协议"></a>OAuth 授权或认证协议</h3><ul>
+<li style="list-style: none"><input type="checkbox"> 始终在后台验证 <code>redirect_uri</code>, 只允许白名单的 URL.</li>
+<li style="list-style: none"><input type="checkbox"> 每次交换令牌的时候不要加 token (不允许 <code>response_type=token</code>).</li>
+<li style="list-style: none"><input type="checkbox"> 使用 <code>state</code> 参数并填充随机的哈希数来防止跨站请求伪造(CSRF).</li>
+<li style="list-style: none"><input type="checkbox"> 对不同的应用分别定义默认的作用域和各自有效的作用域参数.</li>
+</ul>
+<h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 限制流量来防止 DDoS 攻击和暴力攻击.</li>
+<li style="list-style: none"><input type="checkbox"> 在服务端使用 HTTPS 协议来防止 MITM 攻击.</li>
+<li style="list-style: none"><input type="checkbox"> 使用 <code>HSTS</code> 协议防止 SSLStrip 攻击.</li>
+</ul>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 使用与操作相符的 HTTP 操作函数, <code>GET (读取)</code>, <code>POST (创建)</code>, <code>PUT (替换/更新)</code> 以及 <code>DELETE (删除记录)</code>, 如果请求的方法不适用于请求的资源则返回 <code>405 Method Not Allowed</code>.</li>
+<li style="list-style: none"><input type="checkbox"> 在请求头中的 <code>content-type</code> 字段使用内容验证来只允许支持的格式 (如 <code>application/xml</code>, <code>application/json</code> 等等) 并在不满足条件的时候返回 <code>406 Not Acceptable</code>.</li>
+<li style="list-style: none"><input type="checkbox"> 验证 <code>content-type</code> 的发布数据和你收到的一样 (如 <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, <code>application/json</code> 等等).</li>
+<li style="list-style: none"><input type="checkbox"> 验证用户输入来避免一些普通的易受攻击缺陷 (如 <code>XSS</code>, <code>SQL-注入</code>, <code>远程代码执行</code> 等等).</li>
+<li style="list-style: none"><input type="checkbox"> 不要在 URL 中使用任何敏感的数据 (<code>credentials</code>, <code>Passwords</code>, <code>security tokens</code>, or <code>API keys</code>), 而是使用标准的认证请求头.</li>
+<li style="list-style: none"><input type="checkbox"> 使用一个 API Gateway 服务来启用缓存、访问速率限制 (如 <code>Quota</code>, <code>Spike Arrest</code>, <code>Concurrent Rate Limit</code>) 以及动态地部署 APIs resources.</li>
+</ul>
+<h2 id="处理"><a href="#处理" class="headerlink" title="处理"></a>处理</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 检查是否所有的终端都在身份认证之后, 以避免被破坏了的认证体系.</li>
+<li style="list-style: none"><input type="checkbox"> 避免使用特有的资源 id. 使用 <code>/me/orders</code> 替代 <code>/user/654321/orders</code></li>
+<li style="list-style: none"><input type="checkbox"> 使用 <code>UUID</code> 代替自增长的 id.</li>
+<li style="list-style: none"><input type="checkbox"> 如果需要解析 XML 文件, 确保实体解析(entity parsing)是关闭的以避免 <code>XXE</code> 攻击.</li>
+<li style="list-style: none"><input type="checkbox"> 如果需要解析 XML 文件, 确保实体扩展(entity expansion)是关闭的以避免通过指数实体扩展攻击实现的 <code>Billion Laughs/XML bomb</code>.</li>
+<li style="list-style: none"><input type="checkbox"> 在文件上传中使用 CDN.</li>
+<li style="list-style: none"><input type="checkbox"> 如果需要处理大量的数据, 使用 Workers 和 Queues 来快速响应, 从而避免 HTTP 阻塞.</li>
+<li style="list-style: none"><input type="checkbox"> 不要忘了把 DEBUG 模式关掉.</li>
+</ul>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 发送 <code>X-Content-Type-Options: nosniff</code> 头.</li>
+<li style="list-style: none"><input type="checkbox"> 发送 <code>X-Frame-Options: deny</code> 头.</li>
+<li style="list-style: none"><input type="checkbox"> 发送 <code>Content-Security-Policy: default-src &#39;none&#39;</code> 头.</li>
+<li style="list-style: none"><input type="checkbox"> 删除指纹头 - <code>X-Powered-By</code>, <code>Server</code>, <code>X-AspNet-Version</code> 等等.</li>
+<li style="list-style: none"><input type="checkbox"> 在响应中强制使用 <code>content-type</code>, 如果你的类型是 <code>application/json</code> 那么你的 <code>content-type</code> 就是 <code>application/json</code>.</li>
+<li style="list-style: none"><input type="checkbox"> 不要返回敏感的数据, 如 <code>credentials</code>, <code>Passwords</code>, <code>security tokens</code>.</li>
+<li style="list-style: none"><input type="checkbox"> 在操作结束时返回恰当的状态码. (如 <code>200 OK</code>, <code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>405 Method Not Allowed</code> 等等).</li>
+</ul>
+<h2 id="持续集成和持续部署"><a href="#持续集成和持续部署" class="headerlink" title="持续集成和持续部署"></a>持续集成和持续部署</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 使用单元测试和集成测试来审计你的设计和实现.</li>
+<li style="list-style: none"><input type="checkbox"> 引入代码审查流程, 不要自行批准更改.</li>
+<li style="list-style: none"><input type="checkbox"> 在推送到生产环境之前确保服务的所有组件都用杀毒软件静态地扫描过, 包括第三方库和其它依赖.</li>
+<li style="list-style: none"><input type="checkbox"> 为部署设计一个回滚方案.</li>
+</ul>
+<hr>
+<h2 id="也可以看看："><a href="#也可以看看：" class="headerlink" title="也可以看看："></a>也可以看看：</h2><ul>
+<li><a href="https://github.com/yosriady/api-development-tools" target="_blank" rel="noopener">yosriady/api-development-tools</a> - 用于构建RESTful HTTP+JSON API的有用资源集合。</li>
+</ul>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -263,13 +478,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-13T09:51:19+08:00">
-                2017-10-13
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-13T09:51:19+08:00">2017-10-13</time>
             
 
+            
             
 
             
@@ -349,6 +563,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -383,13 +599,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-09T10:31:32+08:00">
-                2017-10-09
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-09T10:31:32+08:00">2017-10-09</time>
             
 
+            
             
 
             
@@ -404,14 +619,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -447,14 +658,14 @@
       
         
           <h1 id="IntelliJ-IDEA-For-Mac-快捷键"><a href="#IntelliJ-IDEA-For-Mac-快捷键" class="headerlink" title="IntelliJ IDEA For Mac 快捷键"></a>IntelliJ IDEA For Mac 快捷键</h1><ul>
-<li>根据官方pdf翻译：<a href="https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf" target="_blank" rel="external">https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf</a></li>
+<li>根据官方pdf翻译：<a href="https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf" target="_blank" rel="noopener">https://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf</a></li>
 <li>在 IntelliJ IDEA 中有两个 Mac 版本的快捷键，一个叫做：Mac OS X，一个叫做：Mac OS X 10.5+</li>
 <li>目前都是用：Mac OS X 10.5+</li>
-<li>有两套的原因：<a href="https://intellij-support.jetbrains.com/hc/en-us/community/posts/206159109-Updated-Mac-OS-X-keymap-Feedback-needed" target="_blank" rel="external">https://intellij-support.jetbrains.com/hc/en-us/community/posts/206159109-Updated-Mac-OS-X-keymap-Feedback-needed</a>
+<li>有两套的原因：<a href="https://intellij-support.jetbrains.com/hc/en-us/community/posts/206159109-Updated-Mac-OS-X-keymap-Feedback-needed" target="_blank" rel="noopener">https://intellij-support.jetbrains.com/hc/en-us/community/posts/206159109-Updated-Mac-OS-X-keymap-Feedback-needed</a>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/10/09/intellij-idea-for-mac快捷键/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -499,6 +710,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -533,13 +746,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T16:35:15+08:00">
-                2017-07-19
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-19T16:35:15+08:00">2017-07-19</time>
             
 
+            
             
 
             
@@ -554,14 +766,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -602,7 +810,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/07/19/关于sdk安全调研及对比分析/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -645,6 +853,8 @@
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -681,13 +891,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T17:56:16+08:00">
-                2017-06-23
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-23T17:56:16+08:00">2017-06-23</time>
             
 
+            
             
 
             
@@ -702,14 +911,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/security/" itemprop="url" rel="index">
-                    <span itemprop="name">security</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/security/" itemprop="url" rel="index"><span itemprop="name">security</span></a></span>
 
                 
                 
@@ -744,13 +949,13 @@
 
       
         
-          <h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><p><a href="https://github.com/mwielgoszewski/doorman" target="_blank" rel="external">https://github.com/mwielgoszewski/doorman</a></p>
-<p><a href="https://osquery.io" target="_blank" rel="external">https://osquery.io</a></p>
-<p><a href="https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/" target="_blank" rel="external">https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/</a><br>
+          <h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><p><a href="https://github.com/mwielgoszewski/doorman" target="_blank" rel="noopener">https://github.com/mwielgoszewski/doorman</a></p>
+<p><a href="https://osquery.io" target="_blank" rel="noopener">https://osquery.io</a></p>
+<p><a href="https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/" target="_blank" rel="noopener">https://komunity.komand.com/learn/featured/introduction-to-osquery-for-threat-detection-dfir/</a><br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/23/osquery-for-security/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -795,6 +1000,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -829,13 +1036,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T17:36:49+08:00">
-                2017-06-20
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T17:36:49+08:00">2017-06-20</time>
             
 
+            
             
 
             
@@ -850,14 +1056,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -896,7 +1098,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/20/2017-06-20-celery使用教程/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -941,6 +1143,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -975,13 +1179,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T16:44:58+08:00">
-                2017-06-20
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T16:44:58+08:00">2017-06-20</time>
             
 
+            
             
 
             
@@ -996,14 +1199,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -1042,7 +1241,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/20/2017-06-20-crontab使用教程/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1087,6 +1286,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1121,13 +1322,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T16:01:30+08:00">
-                2017-06-20
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T16:01:30+08:00">2017-06-20</time>
             
 
+            
             
 
             
@@ -1142,14 +1342,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -1188,7 +1384,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/20/2017-06-20-pycharm使用教程/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1231,6 +1427,8 @@
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1267,13 +1465,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T15:32:51+08:00">
-                2017-06-20
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T15:32:51+08:00">2017-06-20</time>
             
 
+            
             
 
             
@@ -1288,14 +1485,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -1330,13 +1523,13 @@
 
       
         
-          <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>项目地址：<a href="https://github.com/Supervisor/supervisor" target="_blank" rel="external">https://github.com/Supervisor/supervisor</a></p>
-<p>官网：<a href="http://supervisord.org" target="_blank" rel="external">http://supervisord.org</a></p>
+          <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>项目地址：<a href="https://github.com/Supervisor/supervisor" target="_blank" rel="noopener">https://github.com/Supervisor/supervisor</a></p>
+<p>官网：<a href="http://supervisord.org" target="_blank" rel="noopener">http://supervisord.org</a></p>
 <p>Supervisor is a client/server system that allows its users to control a number of processes on UNIX-like operating systems.<br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/20/2017-06-20-supervisor使用教程/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1379,6 +1572,8 @@
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1415,13 +1610,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-18T10:21:06+08:00">
-                2017-06-18
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-18T10:21:06+08:00">2017-06-18</time>
             
 
+            
             
 
             
@@ -1436,14 +1630,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/learn/" itemprop="url" rel="index"><span itemprop="name">learn</span></a></span>
 
                 
                 
@@ -1478,158 +1668,11 @@
 
       
         
-          <h3 id="iterm2下载地址"><a href="#iterm2下载地址" class="headerlink" title="iterm2下载地址"></a>iterm2下载地址</h3><p><a href="https://www.iterm2.com/downloads.html" target="_blank" rel="external">https://www.iterm2.com/downloads.html</a><br>
+          <h3 id="iterm2下载地址"><a href="#iterm2下载地址" class="headerlink" title="iterm2下载地址"></a>iterm2下载地址</h3><p><a href="https://www.iterm2.com/downloads.html" target="_blank" rel="noopener">https://www.iterm2.com/downloads.html</a><br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/18/2017-06-18-iterm2使用教程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://pyscan.me/2017/04/27/2017-04-27-vultr-ss-部署/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="请叫我向公">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="请叫我向公'blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/27/2017-04-27-vultr-ss-部署/" itemprop="url">vultr-ss-部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T15:45:20+08:00">
-                2017-04-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/learn/" itemprop="url" rel="index">
-                    <span itemprop="name">learn</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>vultr提供的vps上部署ss</p>
-<p>优惠链接：<a href="http://www.vultr.com/?ref=7152024" target="_blank" rel="external">http://www.vultr.com/?ref=7152024</a><br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/27/2017-04-27-vultr-ss-部署/#more" rel="contents">
-              阅读全文 &raquo;
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1678,9 +1721,6 @@
           </div>
           
 
-
-          
-
         </div>
         
           
@@ -1709,42 +1749,122 @@
               <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
           </div>
 
-          <nav class="site-state motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
 
-            
-              <div class="site-state-item site-state-posts">
               
-                <a href="/archives">
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
               
-                  <span class="site-state-item-count">23</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
 
-            
               
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
               
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">33</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
+            </nav>
+          
 
           
             <div class="feed-link motion-element">
@@ -1755,30 +1875,17 @@
             </div>
           
 
-          <div class="links-of-author motion-element">
+          
+
+          
+          
+
+          
+          
+
+          
             
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/xj90512" target="_blank" title="GitHub">
-                    
-                      <i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://twitter.com/Bunny_jie" target="_blank" title="Twitter">
-                    
-                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                </span>
-              
-            
-          </div>
-
           
-          
-
-          
-          
-
           
 
         </div>
@@ -1798,17 +1905,21 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">请叫我向公</span>
 
   
+
+  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
@@ -1816,7 +1927,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a> v6.0.3</div>
 
 
 
@@ -1860,7 +1971,11 @@
 
 
 
-  
+
+
+
+
+
 
 
 
@@ -1880,16 +1995,6 @@
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
@@ -1898,45 +2003,29 @@
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
 
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
 
 
 
   
   
 
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
-
-
-
   
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
 
 
 
   
-
-
-  
-
 
 
 
@@ -1963,8 +2052,6 @@
 
 
 
-
-
   
 
 
@@ -1978,6 +2065,10 @@
   
 
   
+
+  
+  
+
   
 
   

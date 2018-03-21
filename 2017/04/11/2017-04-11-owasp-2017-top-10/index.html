@@ -5,12 +5,15 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
+
+
+
 
 
 
@@ -38,10 +41,6 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
 
 
 
@@ -50,49 +49,25 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="owasp,top10,security," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
 
 
 
 
 
 
-<meta name="description" content="提供2017版的owasp top10">
-<meta name="keywords" content="owasp,top10,security">
-<meta property="og:type" content="article">
-<meta property="og:title" content="owasp-2017-top-10">
-<meta property="og:url" content="http://pyscan.me/2017/04/11/2017-04-11-owasp-2017-top-10/index.html">
-<meta property="og:site_name" content="请叫我向公&#39;blog">
-<meta property="og:description" content="提供2017版的owasp top10">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-07T02:09:43.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="owasp-2017-top-10">
-<meta name="twitter:description" content="提供2017版的owasp top10">
 
 
 
@@ -100,16 +75,14 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
-    version: '5.1.3',
+    scheme: 'Muse',
+    version: '6.0.3',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
     algolia: {
       applicationID: '',
       apiKey: '',
@@ -121,13 +94,44 @@
 </script>
 
 
+  
+
+
+
+
+  
+  <meta name="keywords" content="security,owasp,top10," />
+
+
+<meta name="description" content="提供2017版的owasp top10">
+<meta name="keywords" content="security,owasp,top10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="owasp-2017-top-10">
+<meta property="og:url" content="http://pyscan.me/2017/04/11/2017-04-11-owasp-2017-top-10/index.html">
+<meta property="og:site_name" content="请叫我向公&#39;blog">
+<meta property="og:description" content="提供2017版的owasp top10">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-06T04:15:52.317Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="owasp-2017-top-10">
+<meta name="twitter:description" content="提供2017版的owasp top10">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="请叫我向公'blog" type="application/atom+xml" />
+
+
+
 
   <link rel="canonical" href="http://pyscan.me/2017/04/11/2017-04-11-owasp-2017-top-10/"/>
 
 
 
-
-
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
   <title>owasp-2017-top-10 | 请叫我向公'blog</title>
   
 
@@ -137,6 +141,34 @@
 
 
 
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
 
 </head>
 
@@ -151,7 +183,7 @@
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
+      <div class="header-inner"> <div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
@@ -185,21 +217,13 @@
         
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
         </li>
       
         
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
-          </a>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
         </li>
       
 
@@ -211,9 +235,15 @@
 </nav>
 
 
+  
+
+
 
  </div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
@@ -228,6 +258,8 @@
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -262,13 +294,12 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-11T14:12:49+08:00">
-                2017-04-11
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T14:12:49+08:00">2017-04-11</time>
             
 
+            
             
 
             
@@ -283,14 +314,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/security/" itemprop="url" rel="index">
-                    <span itemprop="name">security</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/security/" itemprop="url" rel="index"><span itemprop="name">security</span></a></span>
 
                 
                 
@@ -345,6 +372,26 @@
 <p>Components, such as libraries, frameworks, and other software modules, run with the same privileges as the application. If a vulnerable component is exploited, such an attack can facilitate serious data loss or server takeover. Applications and APIs using components with known vulnerabilities may undermine application defenses and enable various attacks and impacts.</p>
 <h3 id="A10-–-Underprotected-APIs"><a href="#A10-–-Underprotected-APIs" class="headerlink" title="A10 – Underprotected APIs"></a>A10 – Underprotected APIs</h3><p><code>A10 – 未受保护的api接口</code></p>
 <p>Modern applications often involve rich client applications and APIs, such as JavaScript in the browser and mobile apps, that connect to an API of some kind (SOAP/XML, REST/JSON, RPC, GWT, etc.). These APIs are often unprotected and contain numerous vulnerabilities.</p>
+<p>##更新<br>A1:2017-注入</p>
+<p>当不可信数据作为命令或查询的一部分发送给解释器时，会发生注入漏洞，如SQL，NoSQL，OS和LDAP注入。攻击者的恶意数据可能会诱使解释器执行意外的命令或在没有适当授权的情况下访问数据。</p>
+<p>A2：2017-失效的身份认证</p>
+<p>认证和会话管理相关的应用功能实现过程不合理时，使得攻击者可以破坏密码，密钥或会话令牌，或者利用其他实施缺陷暂时或永久占用其他用户的身份。</p>
+<p>A3：2017-敏感的数据曝光</p>
+<p>许多Web应用程序和API不能正确保护敏感数据，如财务数据，医疗保健数据和PII。攻击者可能会窃取或修改这些缺乏安全保护措施的数据，从而进行信用卡欺诈，身份盗用或其他犯罪行为。由此可见，敏感数据加密显得尤为重要，如：传输过程、被存储的数据以及浏览器交互数据。</p>
+<p>A4：2017-XML外部实体引用（XXE，新增）</p>
+<p>许多旧的或配置不佳的XML处理器评估XML文档中的外部实体引用。外部实体可用于使用文件URI处理程序，内部文件共享，内部端口扫描，远程代码执行和拒绝服务攻击来公开内部文件。</p>
+<p>A5：2017 – 损坏访问控制</p>
+<p>未对通过身份验证的用户实施恰当的访问控制。攻击者可以利用这些漏洞访问未经授权的功能或数据，例如访问其他用户的帐户，查看敏感文件，修改其他用户的数据，更改访问权限等。</p>
+<p>A6：2017-安全性错误配置</p>
+<p>安全配置错误是最常见的问题。通常是不安全的默认配置，不完整或特殊配置，开放的云存储，错误配置的HTTP标头，以及包含敏感信息的详细错误消息的结果。不仅所有操作系统，框架，库和应用程序都必须进行安全配置，而且必须及时进行修补和升级。</p>
+<p>A7：2017-跨站点脚本（XSS）</p>
+<p>如果应用程序在未经适当验证或转义的情况下在新网页中包含不受信任的数据，或者使用可以创建HTML或JavaScript的浏览器API更新用户提供的数据的现有网页，就会出现XSS漏洞。 XSS允许攻击者在受害者的浏览器中执行脚本，这些脚本可以劫持用户会话，破坏网站或将用户重定向到恶意网站。</p>
+<p>A8：2017-不安全的反序列化（新增）</p>
+<p>不安全的反序列化通常导致远程代码执行。即使反序列化瑕疵不会导致远程代码执行，也可以用来执行攻击，包括重播攻击，注入攻击和特权升级攻击。</p>
+<p>A9：2017-使用含有已知漏洞的组件</p>
+<p>组件（如库，框架和其他软件模块）以与应用程序相同的权限运行。如果一个易受攻击的组件被利用，这种攻击可能会导致严重的数据丢失或服务器接管。使用已知漏洞组件的应用程序和API可能会破坏应用程序防护并启用各种攻击和影响。</p>
+<p>A10：2017-不足的记录和监测</p>
+<p>记录和监视不足，再加上事件响应缺失或无效集成，攻击者可以进一步攻击系统，维持持久性，转向更多的系统，并篡改，提取或销毁数据。大多数违规研究显示，检测违规的时间超过200天，通常由外部各方检测，而不是内部过程或监控。</p>
 
       
     </div>
@@ -355,35 +402,6 @@
     
 
     
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>支持原创技术分享，您的支持将鼓励我继续创作！</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpeg" alt="请叫我向公 微信支付"/>
-        <p>微信支付</p>
-      </div>
-    
-
-    
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpeg" alt="请叫我向公 支付宝"/>
-        <p>支付宝</p>
-      </div>
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
 
     
 
@@ -391,11 +409,11 @@
       
         <div class="post-tags">
           
+            <a href="/tags/security/" rel="tag"># security</a>
+          
             <a href="/tags/owasp/" rel="tag"># owasp</a>
           
             <a href="/tags/top10/" rel="tag"># top10</a>
-          
-            <a href="/tags/security/" rel="tag"># security</a>
           
         </div>
       
@@ -446,9 +464,6 @@
           </div>
           
 
-
-          
-
   
 
 
@@ -474,10 +489,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
+            Overview
           </li>
         </ul>
       
@@ -490,42 +505,122 @@
               <p class="site-description motion-element" itemprop="description">to be a hacker or to be hack...</p>
           </div>
 
-          <nav class="site-state motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
 
-            
-              <div class="site-state-item site-state-posts">
               
-                <a href="/archives">
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
               
-                  <span class="site-state-item-count">23</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
 
-            
               
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
               
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">33</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
+            </nav>
+          
 
           
             <div class="feed-link motion-element">
@@ -536,30 +631,17 @@
             </div>
           
 
-          <div class="links-of-author motion-element">
+          
+
+          
+          
+
+          
+          
+
+          
             
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/xj90512" target="_blank" title="GitHub">
-                    
-                      <i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://twitter.com/Bunny_jie" target="_blank" title="Twitter">
-                    
-                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
-                </span>
-              
-            
-          </div>
-
           
-          
-
-          
-          
-
           
 
         </div>
@@ -595,17 +677,21 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">请叫我向公</span>
 
   
+
+  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
@@ -613,7 +699,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a> v6.0.3</div>
 
 
 
@@ -657,7 +743,11 @@
 
 
 
-  
+
+
+
+
+
 
 
 
@@ -677,16 +767,6 @@
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
@@ -695,49 +775,33 @@
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
 
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
 
 
 
   
   
 
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
-
-
-
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
 
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
 
 
 
   
-
-
-  
-
 
 
 
@@ -764,8 +828,6 @@
 
 
 
-
-
   
 
 
@@ -779,6 +841,10 @@
   
 
   
+
+  
+  
+
   
 
   
